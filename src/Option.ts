@@ -1,5 +1,3 @@
-type Fn<A> = A | (<A>() => A);
-
 export abstract class Option<A> {
     /** Returns true if the option is $none, false otherwise.
      */
@@ -22,7 +20,7 @@ export abstract class Option<A> {
      *
      *  @param default  the default expression.
      */
-    getOrElse<B extends A>(dft: Fn<B>): A|B {
+    getOrElse<B extends A>(dft: B | (<B>() => B)): A|B {
         if (this.isEmpty()) {
             return typeof dft === 'function' ? dft(): dft;
         }
@@ -196,7 +194,7 @@ export abstract class Option<A> {
  *  collection" contract even though it seems unlikely to matter much in a
  *  collection with max size 1.
  */
-class WithFilter<A> {
+export class WithFilter<A> {
     constructor(
         private self: Option<A>, 
         private p: (a: A) => boolean) {
@@ -222,7 +220,7 @@ class WithFilter<A> {
     }
 }
 
-class TSome<A> extends Option<A>{
+export class TSome<A> extends Option<A>{
     constructor(private readonly x: A){
         super();
     }
@@ -236,7 +234,7 @@ class TSome<A> extends Option<A>{
     }
 }
 
-class TNone<A> extends Option<A>{
+export class TNone<A> extends Option<A>{
     isEmpty(): boolean{
         return true;
     }
