@@ -1,4 +1,5 @@
 # nifty-types
+[![Build Status](https://travis-ci.org/ddoronin/nifty-types.svg?branch=master)](https://travis-ci.org/ddoronin/nifty-types)
 
 ## Option
 ```typescript

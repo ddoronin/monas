@@ -4,8 +4,8 @@
   "description": "Nifty Types for TypeScript",
   "main": "index.js",
   "scripts": {
-    "test:watch": "yarn test -w --watch-extensions ts",
-    "test": "./node_modules/.bin/mocha --require ts-node/register ./src/**/*.spec.ts --reporter nyan",
+    "test:watch": "yarn test --reporter nyan -w --watch-extensions ts",
+    "test": "./node_modules/.bin/mocha --require ts-node/register ./src/**/*.spec.ts",
     "run": "ts-node ./src/index.ts",
     "pre-publish": "rm -rf dist && tsc --declaration -p ./tsconfig.json --outDir dist/"
   },
