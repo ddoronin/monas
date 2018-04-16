@@ -1,29 +1,24 @@
 # nifty-types
 
 ## Option
-
 ```typescript
 abstract class Option<A>
 ```
+Represents optional values. Instances of Option are either a result of `Some()` or the object `None`.
 
 ### Motivation
-
-The idea is to get rid of `null` and `undefined` and thus eliminate null pointer exceptions, reduce branching (if statement) to produce better code.
-
-The `Option` entity represents optional values. Instances of Option are either a result of `Some()` or the object `None`.
+The idea is to get rid of `null` and `undefined` and, thus, eliminate null pointer exceptions, reduce branching (if statement) and produce better code.
 
 The most idiomatic way to use an `Option` instance is to treat it as a collection or monad and use map, flatMap, filter, or foreach:
 
 ```typescript
 import { Option, Some, None } from 'nifty-types';
 
-let name: Option[String] = request.getParameter('name');
+let name: Option<String> = request.getParameter('name');
 let upper = name.map(_ => _.trim()).filter(_ => _.length != 0).map(_ => _.toUpperCase());
 
 console.log(upper.getOrElse(''));
 ```
-
-if None is returned from `request.getParameter()`, the `upper` expression results in `None` and empty string will be printed in the console.
 
 ### Creating an option
 
@@ -47,7 +42,7 @@ let absentGreeting: Option<String> = Some(null) // absentGreeting will be None
 
 ### Example
 
-Let's imagine that we need to implement a repository of users.
+Let's imagine that we need to implement a repository of users that will be used to find users by id and print their full names.
 
 ```typescript
 class User{ 
@@ -85,7 +80,7 @@ let user2 = userRepository.findById(2);
 print(user3); // N/A
 ```
 
-Traditionally we would check if a value is present and it's not null. Using `Option` it's even easier.
+Traditionally we would check if a value is not `undefined` and not `null`. Using `Option` you can do more and easier.
 
 ```typescript
 function print(user: Option<User>){
@@ -93,4 +88,4 @@ function print(user: Option<User>){
     console.log(fullName);
 }
 ```
-Now, our `print()` function implementation can format users and gracefully display 'N/A' when a user is not available.
+Now, our `print()` function implementation can format users and gracefully display `N/A` when a user is not available.
