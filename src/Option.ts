@@ -185,9 +185,9 @@ export abstract class Option<A> {
         return this;
     }
 
-    [Symbol.iterator] = function* iterator():Iterator<A>{
+    [Symbol.iterator] = function*():Iterator<A> {
         if(!this.isEmpty()){
-            yield this.get();
+            return yield this.get();
         }
     }
 
@@ -195,12 +195,6 @@ export abstract class Option<A> {
         return (
             this.isDefined() && target.isDefined() && this.get() === target.get()
         ) || (this.isEmpty() && target.isEmpty());
-    }
-}
-
-Option.prototype[Symbol.iterator] = function*() {
-    if(!this.isEmpty()){
-        yield this.get();
     }
 }
 

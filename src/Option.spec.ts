@@ -247,9 +247,9 @@ describe('Option', () => {
         });
     });
 
-    /*
-    TODO: Investigate TypeError: s.slice is not a function.
-    describe('iterable', () => {
+    
+    //TODO: Investigate TypeError: s.slice is not a function.
+    /*describe('iterable', () => {
         it('should return only the option\'s value when spread into array.', () => {
             let s = Some('something');
             let v = [...s];
