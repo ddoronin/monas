@@ -185,12 +185,6 @@ export abstract class Option<A> {
         return this;
     }
 
-    [Symbol.iterator] = function*():Iterator<A> {
-        if(!this.isEmpty()){
-            return yield this.get();
-        }
-    }
-
     equals(target: Option<A>): boolean {
         return (
             this.isDefined() && target.isDefined() && this.get() === target.get()

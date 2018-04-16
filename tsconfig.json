@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "ES5",
+    "alwaysStrict": true,
+    "lib": [
+        "dom",
+        "dom.iterable",
+        "scripthost",
+        "esnext",
+        "esnext.array",
+        "esnext.asynciterable",
+        "es7",
+        "es6",
+        "es2015.symbol",
+        "es2015.symbol.wellknown"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
