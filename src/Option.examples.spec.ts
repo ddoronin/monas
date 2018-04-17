@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 import { spy } from 'sinon';
-import { Option, Some, None } from './Option';
+import { Option, some, none } from './Option';
 import { find } from './utils';
 
 describe('Example #1: Let\'s find & map something', () => {
@@ -19,9 +19,9 @@ describe('Example #1: Let\'s find & map something', () => {
         });
 
         describe('with monads', () => {
-            it('should return "Hello, World!"', () => {
+            it('should return "HEllo, World!"', () => {
                 let word = array.find(_ => _.startsWith('h'));
-                let res = Some(word).map(_ => _.toUpperCase()).getOrElse('N/A')
+                let res = some(word).map(_ => _.toUpperCase()).getOrElse('N/A')
                 expect(res).to.be.eq('HELLO, WORLD!');
             });
         });

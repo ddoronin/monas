@@ -1,3 +1,5 @@
+import {FuncOrVal, funcOrVal} from './utils';
+
 export abstract class Option<A> {
     /** Returns true if the option is $none, false otherwise.
      */
@@ -18,11 +20,11 @@ export abstract class Option<A> {
     /** Returns the option's value if the option is nonempty, otherwise
      * return the result of evaluating `default`.
      *
-     *  @param default  the default expression.
+     *  @param{FuncOrVal<B>} dft  the default expression.
      */
-    getOrElse<B extends A>(dft: B | (<B>() => B)): A|B {
+    getOrElse<B extends A>(dft: FuncOrVal<B>): A|B {
         if (this.isEmpty()) {
-            return typeof dft === 'function' ? dft(): dft;
+            return funcOrVal(dft);
         }
         return this.get();
     }
@@ -36,7 +38,7 @@ export abstract class Option<A> {
      * val textField = new JComponent(initialText.orNull,20)
      * }}}
      */
-    orNull(): A | null{
+    orNull(): A | null {
         return this.getOrElse(null);
     }
 
@@ -51,8 +53,8 @@ export abstract class Option<A> {
      *  @see flatMap
      *  @see foreach
      */
-    map<B>(f: (a: A) => B): Option<B>{
-        return this.isEmpty() ? None : Some<B>(f(this.get()))
+    map<B>(f: (a: A) => B): Option<B> {
+        return this.isEmpty() ? none : some<B>(f(this.get()))
     }
 
     /** Returns the result of applying $f to this $option's
@@ -79,12 +81,12 @@ export abstract class Option<A> {
      *  @see foreach
      */
     flatMap<B>(f: (a: A) => Option<B>): Option<B>{
-        return this.isEmpty() ? None : f(this.get());
+        return this.isEmpty() ? none : f(this.get());
     }
 
     /* TODO: No way to say ts that <B> should be of type A: Option<B>
     flatten(): A | TNone<A> {
-        return this.isEmpty() ? None : this.get();
+        return this.isEmpty() ? none : this.get();
     }
     */
 
@@ -93,8 +95,9 @@ export abstract class Option<A> {
      *
      *  @param  p   the predicate used for testing.
      */
-    filter(p: (a: A) => boolean): Option<A>{
-        return (this.nonEmpty() && p(this.get())) ? this : None;
+    filter(p: (a: A) => boolean | A): Option<A> {
+        const f = typeof p === 'function' ? p : (_: A) => _ === p;
+        return (this.nonEmpty() && f(this.get())) ? this : none;
     }
 
     /** Returns this $option if it is nonempty '''and''' applying the predicate $p to
@@ -102,13 +105,14 @@ export abstract class Option<A> {
      *
      *  @param  p   the predicate used for testing.
      */
-    filterNot(p: (a: A) => boolean): Option<A>{
-        return (this.isEmpty() || !p(this.get())) ? this : None;
+    filterNot(p: (a: A) => boolean | A): Option<A> {
+        const f = typeof p === 'function' ? p : (_: A) => _ === p;
+        return (this.isEmpty() || !f(this.get())) ? this : none;
     }
 
     /** Returns false if the option is $none, true otherwise.
      */
-    nonEmpty(): boolean{
+    nonEmpty(): boolean {
         return this.isDefined();
     }
 
@@ -116,28 +120,28 @@ export abstract class Option<A> {
     /** Necessary to keep $option from being implicitly converted to
      *  [[scala.collection.Iterable]] in `for` comprehensions.
      */
-    withFilter(p: (a: A) => boolean): WithFilter<A>{
+    withFilter(p: (a: A) => boolean): WithFilter<A> {
         return new WithFilter(this, p);
     }
 
     /** Tests whether the option contains a given value as an element.
      *
      *  @example {{{
-     *  // Returns true because Some instance contains string "something" which equals "something".
-     *  Some("something") contains "something"
+     *  // Returns true because some instance contains string "something" which equals "something".
+     *  some("something") contains "something"
      *
      *  // Returns false because "something" != "anything".
-     *  Some("something") contains "anything"
+     *  some("something") contains "anything"
      *
-     *  // Returns false when method called on None.
-     *  None contains "anything"
+     *  // Returns false when method called on none.
+     *  none contains "anything"
      *  }}}
      *
      *  @param elem the element to test.
      *  @return `true` if the option has an element that is equal (as
      *  determined by `==`) to `elem`, `false` otherwise.
      */
-    contains(elem: A): boolean{
+    contains(elem: A): boolean {
         return !this.isEmpty() && this.get() === elem;
     }
 
@@ -168,7 +172,7 @@ export abstract class Option<A> {
      *  @see map
      *  @see flatMap
      */
-    foreach<U>(f: (a: A) => U) {
+    foreach<U>(f: (a: A) => U): void {
         if (!this.isEmpty()) f(this.get());
     }
 
@@ -190,10 +194,6 @@ export abstract class Option<A> {
     }
 }
 
-/** We need a whole WithFilter class to honor the "doesn't create a new
- *  collection" contract even though it seems unlikely to matter much in a
- *  collection with max size 1.
- */
 export class WithFilter<A> {
     constructor(
         private self: Option<A>, 
@@ -210,7 +210,7 @@ export class WithFilter<A> {
     }
 
 
-    foreach<U>(f: (a: A) => U): void{
+    foreach<U>(f: (a: A) => U): void {
         this.self.filter(this.p).foreach(f);
     }
 
@@ -240,15 +240,15 @@ export class TNone<A> extends Option<A>{
     }
 
     get(): A {
-        throw new RangeError('None.get()');
+        throw new RangeError('none.get()');
     }
 }
 
-export const None = new TNone<any>();
+export const none = new TNone<any>();
 
-export const Some = <A>(x: A): Option<A> => {
+export const some = <A>(x: A): Option<A> => {
     if(x === null || typeof x === 'undefined'){
-        return None as Option<A>;
+        return none as Option<A>;
     }
     return new TSome(x);
 }
