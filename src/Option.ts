@@ -85,7 +85,7 @@ export abstract class Option<A> {
     }
 
     /* TODO: No way to say ts that <B> should be of type A: Option<B>
-    flatten(): A | TNone<A> {
+    flatten(): A | None<A> {
         return this.isEmpty() ? none : this.get();
     }
     */
@@ -226,7 +226,7 @@ export class WithFilter<A> {
     }
 }
 
-export class TSome<A> extends Option<A>{
+export class Some<A> extends Option<A>{
     constructor(private readonly x: A){
         super();
     }
@@ -240,7 +240,7 @@ export class TSome<A> extends Option<A>{
     }
 }
 
-export class TNone<A> extends Option<A>{
+export class None<A> extends Option<A>{
     isEmpty(): boolean{
         return true;
     }
@@ -250,11 +250,11 @@ export class TNone<A> extends Option<A>{
     }
 }
 
-export const none = new TNone<any>();
+export const none = new None<any>();
 
 export const some = <A>(x: A): Option<A> => {
     if(x === null || typeof x === 'undefined'){
         return none as Option<A>;
     }
-    return new TSome(x);
+    return new Some(x);
 };

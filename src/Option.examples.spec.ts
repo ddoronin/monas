@@ -1,32 +1,47 @@
-import { expect, assert } from 'chai';
-import { spy } from 'sinon';
-import { Option, some, none } from './Option';
-import { find } from './utils';
+import { expect } from 'chai';
+import { some } from './Option';
 
-describe('Example #1: Let\'s find & map something', () => {
-    describe('For given array of items find a word starting with "h" and capitalize it or return "N/A"', () => {
-        let array = ['a', 'b', 'c', 'hello, world!'];
+describe('Use cases', () => {
+    describe(' Example #1: Country code lookup', () => {
+        type Country = {name: string, code: number};
+        let countries: Country[] = [{
+            name: 'United States',
+            code: 1
+        }, {
+            name: 'United Kingdom',
+            code: 44
+        }];
 
         describe('traditional way', () => {
-            it('should return "Hello, World!"', () => {
-                let word = array.find(_ => _.startsWith('h'));
-                let res = word && word.toUpperCase() || 'N/A';
-                expect(res).to.be.eq('HELLO, WORLD!');
+            function findCountryName(code: number): string {
+                const country = countries.find(c => c.code === code);
+                if (country) {
+                    return country.name;
+                }
+                return 'Not found';
+            }
+
+            it('should return USA when search for code 1', () => {
+                expect(findCountryName(1)).to.be.eq('United States');
+            });
+
+            it('should return "Not found" when search for code -123', () => {
+                expect(findCountryName(-123)).to.be.eq('Not found');
             });
         });
 
-        describe('with monads', () => {
-            it('should return "HEllo, World!"', () => {
-                let word = array.find(_ => _.startsWith('h'));
-                let res = some(word).map(_ => _.toUpperCase()).getOrElse('N/A')
-                expect(res).to.be.eq('HELLO, WORLD!');
-            });
-        });
+        describe('functional way', () => {
+            function findCountryName(code: number): string {
+                const country = countries.find(c => c.code === code);
+                return some(country).map(_ => _.name).getOrElse('Not found');
+            }
 
-        describe('or', () => {
-            it('should return "Hello, World!"', () => {
-                let res = find(array, _ => _.startsWith('h')).map(_ => _.toUpperCase()).getOrElse('N/A');
-                expect(res).to.be.eq('HELLO, WORLD!');
+            it('should return USA when search for code 1', () => {
+                expect(findCountryName(1)).to.be.eq('United States');
+            });
+
+            it('should return "Not found" when search for code -123', () => {
+                expect(findCountryName(-123)).to.be.eq('Not found');
             });
         });
     });

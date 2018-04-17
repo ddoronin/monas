@@ -262,7 +262,7 @@ describe('Option', () => {
         it('should be nicely iterable in for of', () => {
             let something = some('thing');
             let print = spy();
-            for(let thing of something){
+            for(let thing in something){
                 print(thing);
             }
             print.calledWith('thing');
