@@ -63,3 +63,8 @@ typings/
 # Compided files
 dist
 lib
+
+# Coverage
+coverage
+.nyc_output
+.coveralls.yml
