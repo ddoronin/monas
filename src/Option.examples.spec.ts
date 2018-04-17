@@ -10,10 +10,7 @@ describe('Example #1: Let\'s find & map something', () => {
         describe('traditional way', () => {
             it('should return "Hello, World!"', () => {
                 let word = array.find(_ => _.startsWith('h'));
-                let res = 'N/A';
-                if(word) {
-                    res = word.toUpperCase();
-                }
+                let res = word && word.toUpperCase() || 'N/A';
                 expect(res).to.be.eq('HELLO, WORLD!');
             });
         });

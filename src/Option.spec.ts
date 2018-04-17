@@ -247,13 +247,25 @@ describe('Option', () => {
         });
     });
 
-    
-    //TODO: Investigate TypeError: s.slice is not a function.
-    /*describe('iterable', () => {
+    describe('iterable', () => {
         it('should return only the option\'s value when spread into array.', () => {
-            let s = some('something');
-            let v = [...s];
-            expect(v).to.be.eq(['something']);
+            let s = some('thing');
+            let [head] = [...s];
+            expect(head).to.be.eq('thing');
         });
-    });*/
+
+
+        it('should return nothing when spread None into array.', () => {
+            expect([...none]).to.be.deep.eq([]);
+        });
+
+        it('should be nicely iterable in for of', () => {
+            let something = some('thing');
+            let print = spy();
+            for(let thing of something){
+                print(thing);
+            }
+            print.calledWith('thing');
+        });
+    });
 });

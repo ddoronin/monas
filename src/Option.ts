@@ -192,6 +192,12 @@ export abstract class Option<A> {
             this.isDefined() && target.isDefined() && this.get() === target.get()
         ) || (this.isEmpty() && target.isEmpty());
     }
+
+    [Symbol.iterator] = function* () {
+        if (this.isDefined()) {
+            yield this.get();
+        }
+    }
 }
 
 export class WithFilter<A> {
@@ -251,4 +257,4 @@ export const some = <A>(x: A): Option<A> => {
         return none as Option<A>;
     }
     return new TSome(x);
-}
+};
