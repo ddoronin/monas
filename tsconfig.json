@@ -2,8 +2,10 @@
   "compilerOptions": {
     "sourceMap": true,
     "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
     "module": "commonjs",
-    "target": "ES6",
+    "target": "es6",
     "alwaysStrict": true,
     "lib": [
         "dom",
@@ -20,5 +22,9 @@
   },
   "include": [
     "./src/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }
