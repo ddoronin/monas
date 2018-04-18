@@ -3,15 +3,12 @@
 [![Build Status](https://travis-ci.org/ddoronin/nifty-types.svg?branch=master)](https://travis-ci.org/ddoronin/nifty-types) [![Coverage Status](https://coveralls.io/repos/github/ddoronin/nifty-types/badge.svg)](https://coveralls.io/github/ddoronin/nifty-types)
 
 ```
-npm i nifty-types --save
-yarn add nifty-types
+npm install nifty-types
 ```
 
-## Option<A>
-```typescript
-abstract class Option<A>
-```
-Represents optional values. Instances of Option are either a result of `Some()` or the object `None`.
+## Option&lt;A>
+
+Represents optional values. Instances of Option are either an instance of `Some` or the object `None`.
 
 ### Motivation
 The idea is to get rid of `null` and `undefined` and, thus, eliminate null pointer exceptions, reduce branching (if statement) and produce better code.
@@ -19,80 +16,98 @@ The idea is to get rid of `null` and `undefined` and, thus, eliminate null point
 The most idiomatic way to use an `Option` instance is to treat it as a collection or monad and use map, flatMap, filter, or foreach:
 
 ```typescript
-import { Option, Some, None } from 'nifty-types';
+import { Option, some, none } from 'nifty-types';
 
-let name: Option<String> = request.getParameter('name');
-let upper = name.map(_ => _.trim()).filter(_ => _.length != 0).map(_ => _.toUpperCase());
-
-console.log(upper.getOrElse(''));
+let name: Option&lt;string> = some(x.getParameter());
+let upper: string = name.map(_ => _.trim()).filter(_ => _.length != 0).map(_ => _.toUpperCase()).getOrElse('');
 ```
 
-### Creating an option
-
-Usually, you can simply create an `Option<A>` for a present value by directly calling `Some()` function:
+### Usage 
 
 ```typescript
-let greeting: Option<String> = Some('Hello world');
+import { Option, Some, some, None, none } from 'nifty-types';
+```
+
+`Option<A>` is a base abstract type (it cannot be instantiated). 
+
+`Some<A> extends Option<A>` is one of the possible implementations of Option that wraps a value. 
+
+`None<A> extends Option<A>` is another possible implementation of Option that doesn't wrap any value.
+
+`some<A>(x: A):Option<A>` is a helper function that receives a value and returns either an instance of Some() 
+or the None object if the value is null or undefined.
+
+`none:Option<A>` is an instance of the object None.
+
+#### Creating an option
+
+Usually, you can simply create an `Option<A>` for a present value by directly calling `some()` function:
+
+```typescript
+let greeting: Option&lt;string> = some('Hello world');
 ```
 
 Or, if you know that the value is absent, you simply assign or return the None object:
 
 ```typescript
-let greeting: Option<String> = None;
+let greeting: Option&lt;string> = none;
 ```
 
-Notice that `Some()` function is smart and returns `None` if a given parameter is null or undefined:
+Notice that `some()` function is smart and returns `none` if a given parameter is null or undefined:
 
 ```typescript
-let absentGreeting: Option<String> = Some(null) // absentGreeting will be None
+let absentGreeting: Option&lt;string> = some(null) // absentGreeting will be none
 ```
 
-### Example
+#### Working with options
 
-Let's imagine that we need to implement a repository of users that will be used to find users by id and print their full names.
+An `Option` instance should be treated as a collection. Let's consider an example, 
+where we have a naive repository of great folks and we need to support operation `find`.
 
 ```typescript
-class User{ 
+// This is generic repository, so it can be used for any type of entities. 
+class Repository&lt;T> {
+    
+    // The collection is an array, so it supports array.find() operation that is used below.
+    constructor(private readonly collection: T[]) {
+    }
+
+    // This method will return Option, indicating that it can handle "Not found" case.
+    find&lt;K extends keyof T>(key: K, val: any): Option&lt;T> {
+        // Please notice how some() wraps find result that could be a person or undefined.
+        return some(this.collection.find(_ => _[key] === val));
+    }
+}
+
+class Profile {
     constructor(
-        public id: number,
         public firstName: string,
         public lastName: string,
-        public age: number,
-        public gender: Option[String]
+        // Let's make this field optional just for more fun, it's a good use case for flatMap().
+        public skill: Option&lt;string> = none
     ){ }
 }
-
-class UserRepository {
-  private const users = [
-      new User(0, "John", "Doe", 32, Some("male")),
-      new User(1, "Johanna", "Doe", 30, None))
-  ];
-
-  public findById(id: Int): Option[User]{
-      return Some(users[id]);
-  }
-}
 ```
 
-Now, if you received an instance of `Option<User>` from the `UserRepository` and need to do something with it, how do you do that?
+Let's instantiate a specific repository and fill it in with test data.
 
 ```typescript
-let user1 = userRepository.findById(0);
-print(user1); // John Doe
-
-let user2 = userRepository.findById(1);
-print(user2); // Johana Doe
-
-let user2 = userRepository.findById(2);
-print(user3); // N/A
+const greatFolksRepo = new Repository([
+    new Profile('John', 'Lennon', some('Guitars')),
+    new Profile('Paul', 'McCartney', some('Lead Vocals')),
+    new Profile('George', 'Harrison', some('Lead guitar')),
+    new Profile('Ringo', 'Starr', some('Drums'))
+]);
 ```
 
-Traditionally we would check if a value is not `undefined` and not `null`. Using `Option` you can do more and easier.
-
+Now if we search for John Lennon skill, it should return 'Guitars':
 ```typescript
-function print(user: Option<User>){
-    let fullName = user.map(_ => `${_.firstName} ${_.secondName}`).getOrElse('N/A');
-    console.log(fullName);
-}
+let skill = greatFolksRepo.find('firstName', 'John').flatMap(_ => _.skill); // should be some('Guitars')) 
 ```
-Now, our `print()` function implementation can format users and gracefully display `N/A` when a user is not available.
+
+But also it should gracefully handle not found:
+```typescript
+let skill = greatFolksRepo.find('firstName', 'Dima').flatMap(_ => _.skill); // should be none
+```
+
+Please find more example [here](https://github.com/ddoronin/nifty-types/blob/master/src/Option.examples.spec.ts).
