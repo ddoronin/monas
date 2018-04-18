@@ -18,7 +18,7 @@ The most idiomatic way to use an `Option` instance is to treat it as a collectio
 ```typescript
 import { Option, some, none } from 'nifty-types';
 
-let name: Option&lt;string> = some(x.getParameter());
+let name: Option<string> = some(x.getParameter());
 let upper: string = name.map(_ => _.trim()).filter(_ => _.length != 0).map(_ => _.toUpperCase()).getOrElse('');
 ```
 
@@ -44,19 +44,19 @@ or the None object if the value is null or undefined.
 Usually, you can simply create an `Option<A>` for a present value by directly calling `some()` function:
 
 ```typescript
-let greeting: Option&lt;string> = some('Hello world');
+let greeting: Option<string> = some('Hello world');
 ```
 
 Or, if you know that the value is absent, you simply assign or return the None object:
 
 ```typescript
-let greeting: Option&lt;string> = none;
+let greeting: Option<string> = none;
 ```
 
 Notice that `some()` function is smart and returns `none` if a given parameter is null or undefined:
 
 ```typescript
-let absentGreeting: Option&lt;string> = some(null) // absentGreeting will be none
+let absentGreeting: Option<string> = some(null) // absentGreeting will be none
 ```
 
 #### Working with options
@@ -66,14 +66,14 @@ where we have a naive repository of great folks and we need to support operation
 
 ```typescript
 // This is generic repository, so it can be used for any type of entities. 
-class Repository&lt;T> {
+class Repository<T> {
     
     // The collection is an array, so it supports array.find() operation that is used below.
     constructor(private readonly collection: T[]) {
     }
 
     // This method will return Option, indicating that it can handle "Not found" case.
-    find&lt;K extends keyof T>(key: K, val: any): Option&lt;T> {
+    find<K extends keyof T>(key: K, val: any): Option<T> {
         // Please notice how some() wraps find result that could be a person or undefined.
         return some(this.collection.find(_ => _[key] === val));
     }
@@ -84,7 +84,7 @@ class Profile {
         public firstName: string,
         public lastName: string,
         // Let's make this field optional just for more fun, it's a good use case for flatMap().
-        public skill: Option&lt;string> = none
+        public skill: Option<string> = none
     ){ }
 }
 ```
