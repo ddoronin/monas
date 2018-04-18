@@ -119,20 +119,6 @@ describe('Option', () => {
         });
     });
 
-    /*
-    describe('flatten', () => {
-        it('should return the option\'s value.', () => {
-            let a = some(some('Hello, World!');
-            assert(a.flatten().equals(some('Hello, World!')));
-        });
-
-        it('should return none if the option is empty.', () => {
-            let a = none;
-            assert(a.flatten().equals(none));
-        });
-    });
-    */
-
     describe('filter', () => {
         it('should return this $option if it is nonempty and applying the predicate $p to this $option\'s value returns true.', () => {
             let a = some(42);
@@ -190,12 +176,19 @@ describe('Option', () => {
         });
     });
 
-    /*
     describe('forall', () => {
-        it('should return true if this option is empty or the predicate $p returns true when applied to this $option\'s value.', () => {
-            assert(some(42).forall(_ => _ === 42));
+        it('should return true if this option is empty.', () => {
+            assert(none.forall(_ => _ > 0));
         });
-    });*/
+
+        it('should return true if the predicate $p returns true when applied to this $option\'s value.', () => {
+            assert(some(42).forall(_ => _ > 0));
+        });
+
+        it('should return false if the predicate $p returns false when applied to this $option\'s value.', () => {
+            assert(!some(42).forall(_ => _ > 42));
+        });
+    });
 
     describe('foreach', () => {
         it('should apply the given procedure $f to the option\'s value, if it is nonempty. Otherwise, do nothing.', () => {
