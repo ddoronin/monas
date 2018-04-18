@@ -110,4 +110,34 @@ But also it should gracefully handle not found:
 let skill = greatFolksRepo.find('firstName', 'Dima').flatMap(_ => _.skill); // should be none
 ```
 
-Please find more example [here](https://github.com/ddoronin/nifty-types/blob/master/src/Option.examples.spec.ts).
+More examples could be found [here](https://github.com/ddoronin/nifty-types/blob/master/src/Option.examples.spec.ts).
+
+## Either&lt;A, B>
+
+Represents a value of one of two possible types (a disjoint union). 
+An instance of Either is an instance of either `Left` or `Right`.
+Convention dictates that Left is used for failure and Right is used for success.
+
+
+### Motivation
+
+`Either` is nifty for validation logic when you want to return either a successfully 
+parsed value, or a validation error.
+
+### Usage 
+
+```typescript
+import { Either, Left, left, Right, right } from 'nifty-types';
+```
+
+`Either<A, B>` is a base abstract type (it cannot be instantiated). 
+
+`Right<A, B> extends Either<A, B>` is a right (good) part.
+
+`Left<A, B> extends Either<A, B>` is a left (failed) part. 
+
+`right<A, B>(x: B):Either<A, B>` is a helper function wrapping `Right`.
+
+`left<A, B>(x: A):Either<A, B>` is a helper function wrapping `Left`.
+
+Examples could be found [here](https://github.com/ddoronin/nifty-types/blob/master/src/Either.examples.spec.ts).
