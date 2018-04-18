@@ -1,4 +1,5 @@
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
+import { spy } from 'sinon';
 import { Option, none, some} from './Option';
 
 describe('Use cases', () => {
@@ -71,14 +72,28 @@ describe('Use cases', () => {
                 public firstName: string,
                 public lastName: string,
                 public skill: Option<string> = none
-            ){ }
+            ) {
+            }
         }
 
-        const greatFolksRepo = new Repository([
+        const greatFolksRepo = new Repository<Profile>([
             new Profile('John', 'Lennon', some('Guitars')),
             new Profile('Paul', 'McCartney', some('Lead Vocals')),
             new Profile('George', 'Harrison', some('Lead guitar')),
             new Profile('Ringo', 'Starr', some('Drums'))
+        ]);
+
+        class Album {
+            constructor(
+                public title: string,
+                public year: number,
+                public author: string
+            ) {
+            }
+        }
+
+        const greatMusicRepo = new Repository<Album>([
+            new Album('Ram', 197, 'Paul McCartney',)
         ]);
 
         it('should find John Lennon skill', () => {
@@ -89,6 +104,20 @@ describe('Use cases', () => {
         it('should gracefully handle not found person', () => {
             let skill = greatFolksRepo.find('firstName', 'Dima').flatMap(_ => _.skill);
             expect(skill).to.be.deep.eq(none);
+        });
+
+        it('should gracefully resolve options using `for` and do find a person and his great albums', () => {
+            const findAlbum = (firstName: string): string | undefined => {
+                for (let folk of greatFolksRepo.find('firstName', firstName)) {
+                    let fullName = `${folk.firstName} ${folk.lastName}`;
+                    for (let album of greatMusicRepo.find('author', fullName)) {
+                        return album.title;
+                    }
+                }
+            };
+
+            expect(findAlbum('Paul')).to.be.eq('Ram');
+            expect(findAlbum('Ringo')).to.be.undefined;
         });
     });
 });
