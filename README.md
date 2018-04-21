@@ -1,9 +1,12 @@
 # **_`Nifty Types`_**  _inspired by Scala_ [<img src="http://www.scala-lang.org/resources/img/frontpage/scala-spiral.png" alt="Drawing" width="20px"/>](http://www.scala-lang.org/)               
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/nifty-types/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/nifty-types.svg?style=flat)](https://www.npmjs.com/package/nifty-types)
-[![Build Status](https://travis-ci.org/ddoronin/nifty-types.svg?branch=master)](https://travis-ci.org/ddoronin/nifty-types) [![Coverage Status](https://coveralls.io/repos/github/ddoronin/nifty-types/badge.svg)](https://coveralls.io/github/ddoronin/nifty-types)
+_introduces `Option<A>` and `Either<A, B>` for Javascript Ninjas._
 
-_introduces `Option<A>` and `Either<A, B>` for Javascript._
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/nifty-types/blob/master/LICENSE) 
+[![npm version](https://img.shields.io/npm/v/nifty-types.svg?style=flat)](https://www.npmjs.com/package/nifty-types) 
+[![Build Status](https://travis-ci.org/ddoronin/nifty-types.svg?branch=master)](https://travis-ci.org/ddoronin/nifty-types) 
+[![Coverage Status](https://coveralls.io/repos/github/ddoronin/nifty-types/badge.svg)](https://coveralls.io/github/ddoronin/nifty-types) 
+[![Slack chat](https://now-examples-slackin-fpiresrxzs.now.sh/badge.svg)](https://now-examples-slackin-fpiresrxzs.now.sh) 
 
 ```
 npm install nifty-types
@@ -15,13 +18,15 @@ Represents optional values. Instances of Option are either an instance of `Some`
 
 The idea is to get rid of `null` and `undefined` and, thus, eliminate null pointer exceptions, reduce branching (if statement) and produce better code.
 
-| Exported | Description |
+| &nbsp;Exported&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 | ------ | ----------- |
 | `Option<A>`  | the base **abstract** class that implements utility functions for instances of classes `Some` and `None`. It's primarily used to indicate that a type has an optional value. |
 | `Some<A>` |  one of the possible implementations of `Option<A>` that wraps a value. The incapsulated value is available by the `get()` method. |
 | `None<A>` | another implementation of `Option<A>` indicating absence of value.|
-| `some<A>(x: A):Option<A>` | a helper function instantiating objects of type `Some` or `None` based on a provided value.|
-| `none:Option<A>` | a single instance of `None<A>`. |
+| `some<A>(x: A): Option<A>` | a helper function instantiating objects of type `Some` or `None` based on a provided value.|
+| `none: Option<A>` | a single instance of `None<A>`. |
+
+### Creating an option
 
 Usually, you can simply create an `Option<A>` for a present value by directly calling `some()` function:
 
@@ -41,19 +46,46 @@ The function `some()` is smart and returns `none` if a given parameter is null o
 let absentGreeting: Option<string> = some(null) // absentGreeting will be none
 ```
 
-The most idiomatic way to use an `Option` instance is to treat it as a collection or monad and use map, flatMap, filter, or foreach:
+### Getting an option value
 
-For example, for a given country code we want to find the country name or print "N/A" if it's not found. 
+There are several ways of getting an Option value:
+
+a) the easiest but NOT recommended way.
+```typescript
+let str: String = greeting.get();
+// if greeting is None, it will throw RangeError('none.get()').
+```
+
+b) it's recommended to call `getOrElse()` function.
+```typescript
+let str: String = greeting.getOrElse(''); 
+// if greeting is None, it will return an empty string.
+```
+
+c) class `Option` implements `Symbol.Iterable`, so there is a cute funny way:
+```typescript
+let [str]: String = [...greeting]; 
+// a result of this spread operator will be either an array of one element if Option is Some 
+// or an empty array if it's None.
+```
+d) for full-metal Javascript Ninjas:
+```typescript
+for(let str: String of greeting){
+    // this will be executed only is greeting has Some value.
+}
+```
+
+### Working with options
+
+The most idiomatic way to use an `Option` instance is to treat it as a collection or monad and use map, flatMap, filter, or foreach.
+
+Let's consider an example where for a given country code we need to find the country name or print "N/A" if it's not found. 
 
 ```typescript
 import { Option, none, some} from './Option';
 
-type Country = {name: string, code: number};
-let countries: Country[] = [{
-    name: 'United States', code: 1
-}, {
-    name: 'United Kingdom', code: 44
-}];
+type Country = { name: string, code: number };
+let countries: Country[] = [{ name: 'United States', code: 1 }, { name: 'United Kingdom', code: 44 }];
 
 function getNameByCode(code: number): string {
     // find a country by code
@@ -62,7 +94,7 @@ function getNameByCode(code: number): string {
     // if the country is not null return the name or N/A
     return some(country).map(_ => _.name).getOrElse('N/A');
     //     ^^^           ^^^ select name   ^^^ get a value if exists
-    //  create Option                          otherwise use 'N/A'
+    //     create Option<Country>              otherwise use 'N/A'
 }
 ```
 
@@ -74,16 +106,31 @@ Represents a value of one of two possible types (a disjoint union).
 An instance of Either is an instance of either `Left` or `Right`.
 Convention dictates that Left is used for failure and Right is used for success.
 
-| Exported | Description |
+| &nbsp;Exported&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description |
 | ------ | ----------- |
 | `Either<A, B>`| the base **abstract** class that implements utility functions for instances of classes `Left` and `Right`. |
-| `Right<A, B>` | a right ("good") part. |
-| `Left<A, B>` | a left part, e.g. Error. |
+| `Right<A, B>` | a right "good" part. |
+| `Left<A, B>` | a left "fail over" part, e.g. Error. |
 | `right<A, B>(x: B): Either<A, B>` | a helper function instantiating `Right` objects. |
 | `left<A, B>(x: B): Either<A, B>` | a helper function instantiating `Left` objects. |
 
-`Either` is really nifty for validation logic when you want to return either a successfully 
+`Either` is a power-full type for different kinds of validations when you want to return either a successfully 
 parsed value, or a validation error.
+
+### Creating an either
+
+Usually, you can simply create an `Either<A>` for a present value by directly calling `right()` or `left()` helper functions:
+
+```typescript
+let eitherNumber: Either<string, number> = right(42); // equivalent to new Right(42)
+```
+
+or
+
+```typescript
+let eitherNumber: Either<string, number> = left('Not a number'); // equivalent to new Left('Not a number')
+```
+
 
 It can be used in forms validation when we need to check that 
 a give field satisfied some conditions, e.g. age is a number in a range. 
@@ -119,3 +166,7 @@ validateAge(20).fold(age => console.info(age), error => console.error(error));
 ```
 
 More examples could be found [here](https://github.com/ddoronin/nifty-types/blob/master/src/Either.examples.spec.ts).
+
+## License
+
+MIT
