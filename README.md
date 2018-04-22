@@ -1,11 +1,11 @@
-# **_`Ninja Types`_**  _inspired by Scala_ [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/scala-spiral.png" alt="Scala" width="20px"/>](http://www.scala-lang.org/) and Ninjas [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/ninja.png" alt="Ninja" width="48px"/>]()
+# **_`Ninja Types`_**  _inspired by Scala_ [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/scala-spiral.png" alt="Scala" width="20px"/>](http://www.scala-lang.org/), _developed for Ninjas_ [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/ninja.png" alt="Ninja" width="48px"/>]()
 
 _introduces fundamental monads: `Option<A>` and `Either<A, B>` - for Javascript Ninjas._
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/nifty-types/blob/master/LICENSE) 
-[![npm version](https://img.shields.io/npm/v/nifty-types.svg?style=flat)](https://www.npmjs.com/package/nifty-types) 
-[![Build Status](https://travis-ci.org/ddoronin/nifty-types.svg?branch=master)](https://travis-ci.org/ddoronin/nifty-types) 
-[![Coverage Status](https://coveralls.io/repos/github/ddoronin/nifty-types/badge.svg)](https://coveralls.io/github/ddoronin/nifty-types) 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/ninja-types/blob/master/LICENSE) 
+[![npm version](https://img.shields.io/npm/v/ninja-types.svg?style=flat)](https://www.npmjs.com/package/ninja-types) 
+[![Build Status](https://travis-ci.org/ddoronin/ninja-types.svg?branch=master)](https://travis-ci.org/ddoronin/ninja-types) 
+[![Coverage Status](https://coveralls.io/repos/github/ddoronin/ninja-types/badge.svg)](https://coveralls.io/github/ddoronin/ninja-types) 
 [![Slack chat](https://now-examples-slackin-fpiresrxzs.now.sh/badge.svg)](https://now-examples-slackin-fpiresrxzs.now.sh) 
 
 ```
