@@ -1,4 +1,4 @@
-# **_`Nifty Types`_**  _inspired by Scala_ [<img src="http://www.scala-lang.org/resources/img/frontpage/scala-spiral.png" alt="Drawing" width="20px"/>](http://www.scala-lang.org/)               
+# **_`Nifty Types`_**  _inspired by Scala_ [<img src="https://github.com/ddoronin/nifty-types/blob/master/assets/scala-spiral.png" alt="Drawing" width="20px"/>](http://www.scala-lang.org/)               
 
 _introduces `Option<A>` and `Either<A, B>` for Javascript Ninjas._
 
@@ -18,7 +18,7 @@ Represents optional values. Instances of Option are either an instance of `Some`
 
 The idea is to get rid of `null` and `undefined` and, thus, eliminate null pointer exceptions, reduce branching (if statement) and produce better code.
 
-| &nbsp;Exported&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
+| &nbsp;Exported&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 | ------ | ----------- |
 | `Option<A>`  | the base **abstract** class that implements utility functions for instances of classes `Some` and `None`. It's primarily used to indicate that a type has an optional value. |
 | `Some<A>` |  one of the possible implementations of `Option<A>` that wraps a value. The incapsulated value is available by the `get()` method. |
@@ -62,15 +62,15 @@ let str: String = greeting.getOrElse('');
 // if greeting is None, it will return an empty string.
 ```
 
-c) class `Option` implements `Symbol.Iterable`, so there is a cute funny way:
+c) class `Option` implements `Symbol.Iterable`, so there is a cute funny way for getting an option value:
 ```typescript
 let [str]: String = [...greeting]; 
 // a result of this spread operator will be either an array of one element if Option is Some 
 // or an empty array if it's None.
 ```
-d) for full-metal Javascript Ninjas:
+d) and the last but not least approach should make full-metal Javascript Ninjas cry in happiness:
 ```typescript
-for(let str: String of greeting){
+for(let str: String of greeting) {
     // this will be executed only is greeting has Some value.
 }
 ```
@@ -106,7 +106,7 @@ Represents a value of one of two possible types (a disjoint union).
 An instance of Either is an instance of either `Left` or `Right`.
 Convention dictates that Left is used for failure and Right is used for success.
 
-| &nbsp;Exported&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description |
+| &nbsp;Exported&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description |
 | ------ | ----------- |
 | `Either<A, B>`| the base **abstract** class that implements utility functions for instances of classes `Left` and `Right`. |
 | `Right<A, B>` | a right "good" part. |
@@ -114,12 +114,14 @@ Convention dictates that Left is used for failure and Right is used for success.
 | `right<A, B>(x: B): Either<A, B>` | a helper function instantiating `Right` objects. |
 | `left<A, B>(x: B): Either<A, B>` | a helper function instantiating `Left` objects. |
 
-`Either` is a power-full type for different kinds of validations when you want to return either a successfully 
-parsed value, or a validation error.
+Generally `Either` can be considered as an alternative to `Option` where instead of 
+`None` a useful information could be encapsulated into `Left`. 
+It turns out that `Either` is a power-full type for validations 
+since it can return either a successfully parsed value, or a validation error.
 
 ### Creating an either
 
-Usually, you can simply create an `Either<A>` for a present value by directly calling `right()` or `left()` helper functions:
+Usually, you can simply create an `Either<A, B>` by directly calling `right()` or `left()` helper functions:
 
 ```typescript
 let eitherNumber: Either<string, number> = right(42); // equivalent to new Right(42)
@@ -131,38 +133,42 @@ or
 let eitherNumber: Either<string, number> = left('Not a number'); // equivalent to new Left('Not a number')
 ```
 
+### Extracting values from `Either`
 
-It can be used in forms validation when we need to check that 
-a give field satisfied some conditions, e.g. age is a number in a range. 
+`Either` is right-biased, which means that `Right` is assumed to be the default case to operate on. 
+If it is `Left`, operations like `map` and `flatMap` return the `Left` value unchanged:
 
 ```typescript
-import { Either, left, right } from 'nifty-types';
+right<number, string>(42).map(_ => _ * 2).getOrElse(-1); // 84
+//                        ^^^             ^^^ will get 84 from the right 
+//                        map will be applied to the right part 
+```
 
-const AGE_MIN = 14;
-const AGE_MAX = 30;
+or
 
-function validateAge(input: string): Either<string, number> {
-    try {
-        let age: number = parseInt(input, 10);
-        if(isNaN(age)){
-            throw new Error('Invalid input, the age should be a number.');
-        }
+```typescript
+left<number, string>('').map(_ => _ * 2).getOrElse(-1);  // -1
+//                       ^^^             ^^^ will print -1 because there's no any right
+//                       won't be applied since it's left
+```
 
-        if(age < AGE_MIN || age > AGE_MAX){
-            throw new RangeError(`The age should be in range between ${AGE_MIN} and ${AGE_MAX}.`);
-        }
+`Either` can be swapped in order to work with useful info from `Left`, e.g.:
 
-        // The age is valid, it's right.
-        return right(age);
-    } catch (e) {
-        // There are some validation errors.
-        return left(e.message);
-    }
+```typescript
+left<number, string>('useful info').swap().getOrElse('');  // useful info
+//                                  /^^^   ^^^ here 'useful info' is "right" 
+//             swap Left and Right /
+```
+
+For hardcore Javascript Ninjas `Either` implements `Symbol.Iterable`, so enjoy:
+```typescript
+let eitherNumber = right<number, string>(42).map(_ => _ * 2);
+
+let [n] = [...eitherNumber]; // n === 42
+
+for(let num of eitherNumber) {
+    // for ensures that the num will be 42
 }
-
-// Usage
-validateAge(20).fold(age => console.info(age), error => console.error(error));
-//                   ^^^ on success            ^^^ on error
 ```
 
 More examples could be found [here](https://github.com/ddoronin/nifty-types/blob/master/src/Either.examples.spec.ts).
