@@ -1,6 +1,6 @@
-# **_`Nifty Types`_**  _inspired by Scala_ [<img src="https://github.com/ddoronin/nifty-types/blob/master/assets/scala-spiral.png" alt="Drawing" width="20px"/>](http://www.scala-lang.org/)               
+# **_`Ninja Types`_**  _inspired by Scala_ [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/scala-spiral.png" alt="Scala" width="20px"/>](http://www.scala-lang.org/) and Ninjas [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/ninja.png" alt="Ninja" width="48px"/>]()
 
-_introduces `Option<A>` and `Either<A, B>` for Javascript Ninjas._
+_introduces fundamental monads: `Option<A>` and `Either<A, B>` - for Javascript Ninjas._
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/nifty-types/blob/master/LICENSE) 
 [![npm version](https://img.shields.io/npm/v/nifty-types.svg?style=flat)](https://www.npmjs.com/package/nifty-types) 
@@ -9,7 +9,7 @@ _introduces `Option<A>` and `Either<A, B>` for Javascript Ninjas._
 [![Slack chat](https://now-examples-slackin-fpiresrxzs.now.sh/badge.svg)](https://now-examples-slackin-fpiresrxzs.now.sh) 
 
 ```
-npm install nifty-types
+npm install ninja-types
 ```
 
 ## Option&lt;A>
@@ -98,7 +98,7 @@ function getNameByCode(code: number): string {
 }
 ```
 
-More examples could be found [here](https://github.com/ddoronin/nifty-types/blob/master/src/Option.examples.spec.ts).
+More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/src/Option.examples.spec.ts).
 
 ## Either&lt;A, B>
 
@@ -171,7 +171,7 @@ for(let num of eitherNumber) {
 }
 ```
 
-More examples could be found [here](https://github.com/ddoronin/nifty-types/blob/master/src/Either.examples.spec.ts).
+More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/src/Either.examples.spec.ts).
 
 ## License
 

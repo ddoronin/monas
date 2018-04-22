@@ -1,7 +1,7 @@
 {
-  "name": "nifty-types",
-  "version": "1.0.4",
-  "description": "Nifty Types for TypeScript",
+  "name": "ninja-types",
+  "version": "0.0.1",
+  "description": "Typescript Monads For Javascript Ninjas",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -30,14 +30,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ddoronin/nifty-types.git"
+    "url": "git+https://github.com/ddoronin/ninja-types.git"
   },
   "author": "Dima Doronin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ddoronin/nifty-types/issues"
+    "url": "https://github.com/ddoronin/ninja-types/issues"
   },
-  "homepage": "https://github.com/ddoronin/nifty-types#readme",
+  "homepage": "https://github.com/ddoronin/ninja-types#readme",
   "dependencies": {
     "typescript": "^2.8.1"
   },
