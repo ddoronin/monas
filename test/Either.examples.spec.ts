@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Either, left, right } from './Either';
+import { Either, left, right } from '../src/Either';
 
 describe('Either examples', () => {
     describe('Example #1: input parser', () => {

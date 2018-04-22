@@ -1,7 +1,7 @@
 import { expect, assert } from 'chai';
 import { spy } from 'sinon';
-import { Either, left, right } from './Either';
-import { none, some } from './Option';
+import { Either, left, right } from '../src/Either';
+import { none, some } from '../src/Option';
 
 describe('Either', () => {
 

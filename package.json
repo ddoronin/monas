@@ -5,10 +5,10 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "coverage": "rm -rf coverage && nyc --reporter lcov mocha --require ts-node/register ./src/**/*.spec.ts",
+    "coverage": "rm -rf coverage && nyc --reporter lcov mocha --require ts-node/register ./test/**/*.ts",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
     "test:watch": "yarn test --reporter nyan -w --watch-extensions ts",
-    "test": "./node_modules/.bin/mocha --require ts-node/register ./src/**/*.spec.ts",
+    "test": "./node_modules/.bin/mocha --require ts-node/register ./test/**/*.spec.ts",
     "run": "ts-node ./src/index.ts",
     "pre-publish": "rm -rf lib && tsc --declaration -p ./tsconfig.json --outDir lib/"
   },

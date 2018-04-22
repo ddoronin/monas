@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 import { spy } from 'sinon';
-import { Option, some, none } from './Option';
+import { Option, some, none } from '../src/Option';
 
 describe('Option', () => {
 

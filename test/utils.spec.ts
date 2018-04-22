@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { find, funcOrVal } from './utils';
+import { find, funcOrVal } from '../src/utils';
 
 describe('utils', () => {
     describe('find<A>(array: A[], p: (a: A) => boolean): Option<A>', () => {

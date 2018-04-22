@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 import { spy } from 'sinon';
-import { Option, none, some} from './Option';
+import { Option, none, some} from '../src/Option';
 
 describe('Use cases', () => {
     describe('Example #1: Country code lookup', () => {
