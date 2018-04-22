@@ -1,6 +1,6 @@
 import { Option, some } from './Option';
 
-export function find<A>(array: A[], p: (a: A) => boolean): Option<A>{
+export function find<A>(array: A[], p: (a: A) => boolean): Option<A> {
     return some(array.find(p));
 }
 
