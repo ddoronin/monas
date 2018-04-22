@@ -181,6 +181,12 @@ export abstract class Either<A, B> {
         }
         return new Left(left);
     }
+
+    [Symbol.iterator] = function* () {
+        if (this.isRight) {
+            yield this.getRight();
+        }
+    }
 }
 
 /** The left side of the disjoint union.

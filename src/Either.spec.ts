@@ -117,4 +117,27 @@ describe('Either', () => {
             expect(opt).to.be.eq(none);
         });
     });
+
+    describe('iterable', () => {
+        it('should return only the right\'s value when spread into array.', () => {
+            let either = right('thing');
+            let [r] = [...either];
+            expect(r).to.be.eq('thing');
+        });
+
+
+        it('should return nothing when spread left into array.', () => {
+            let either = left('thing');
+            expect([...either]).to.be.deep.eq([]);
+        });
+
+        it('should be nicely iterable in for of', () => {
+            let something = right('thing');
+            let print = spy();
+            for(let thing in something){
+                print(thing);
+            }
+            print.calledWith('thing');
+        });
+    });
 });
