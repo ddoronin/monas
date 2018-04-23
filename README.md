@@ -98,7 +98,7 @@ function getNameByCode(code: number): string {
 }
 ```
 
-More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/src/Option.examples.spec.ts).
+More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/test/Option.examples.spec.ts).
 
 ## Either&lt;A, B>
 
@@ -171,7 +171,7 @@ for(let num of eitherNumber) {
 }
 ```
 
-More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/src/Either.examples.spec.ts).
+More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/test/Either.examples.spec.ts).
 
 ## License
 
