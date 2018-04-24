@@ -94,7 +94,7 @@ export abstract class Option<A> {
      *
      * @param  p   the predicate used for testing.
      */
-    filter(p: (a: A) => boolean | A): Option<A> {
+    filter(p: ((a: A) => boolean) | A): Option<A> {
         const f = typeof p === 'function' ? p : (_: A) => _ === p;
         return (this.nonEmpty() && f(this.get())) ? this : none;
     }
@@ -105,7 +105,7 @@ export abstract class Option<A> {
      *
      * @param  p   the predicate used for testing.
      */
-    filterNot(p: (a: A) => boolean | A): Option<A> {
+    filterNot(p: ((a: A) => boolean) | A): Option<A> {
         const f = typeof p === 'function' ? p : (_: A) => _ === p;
         return (this.isEmpty() || !f(this.get())) ? this : none;
     }

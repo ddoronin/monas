@@ -120,42 +120,76 @@ describe('Option', () => {
     });
 
     describe('filter', () => {
-        it('should return this $option if it is nonempty and applying the predicate $p to this $option\'s value returns true.', () => {
-            let a = some(42);
-            assert(a.filter(_ => _ === 42).equals(some(42)));
+        describe('when predicate is a function', () => {
+            it('should return this $option if it is nonempty and applying the predicate $p to this $option\'s value returns true.', () => {
+                let a = some(42);
+                assert(a.filter(_ => _ === 42).equals(some(42)));
+            });
+
+            it('should return this $none if it is nonempty, but applying the predicate $p to this $option\'s value returns false.', () => {
+                let a = some(42);
+                assert(a.filter(_ => _ === 13).equals(none));
+            });
+
+            it('should return this $none if it is empty.', () => {
+                let a: Option<number> = none;
+                assert(a.filter(_ => true).equals(none));
+            });
         });
 
-        it('should return this $none if it is nonempty, but applying the predicate $p to this $option\'s value returns false.', () => {
-            let a = some(42);
-            assert(a.filter(_ => _ === 13).equals(none));
-        });
+        describe('when predicate is a constant', () => {
+            it('should return this $option if it is nonempty and applying the predicate $p to this $option\'s value returns true.', () => {
+                let a = some(42);
+                assert(a.filter(42).equals(some(42)));
+            });
 
-        it('should return this $none if it is empty.', () => {
-            let a = none;
-            assert(a.filter(_ => true).equals(none));
+            it('should return this $none if it is nonempty, but applying the predicate $p to this $option\'s value returns false.', () => {
+                let a = some(42);
+                assert(a.filter(13).equals(none));
+            });
+
+            it('should return this $none if it is empty.', () => {
+                let a = none;
+                assert(a.filter(null).equals(none));
+            });
         });
     });
 
     describe('filterNot', () => {
-        it('should return this $option if it is nonempty and applying the predicate $p to this $option\'s value returns false.', () => {
-            let a = some(42);
-            assert(a.filterNot(_ => _ === 13).equals(some(42)));
+        describe('when predicate is a function', () => {
+            it('should return this $option if it is nonempty and applying the predicate $p to this $option\'s value returns false.', () => {
+                let a = some(42);
+                assert(a.filterNot(_ => _ === 13).equals(some(42)));
+            });
+
+            it('should return $none if it is nonempty, but applying the predicate $p to this $option\'s value returns true.', () => {
+                let a = some(42);
+                assert(a.filterNot(_ => _ === 42).equals(none));
+            });
+
+            it('should return $none if the option\'s value is empty.', () => {
+                let a: Option<number> = none;
+                assert(a.filterNot(_ => _ === 42).equals(none));
+            });
         });
 
-        it('should return $none if it is nonempty, but applying the predicate $p to this $option\'s value returns true.', () => {
-            let a = some(42);
-            assert(a.filterNot(_ => _ === 42).equals(none));
-        });
+        describe('when predicate is a constant', () => {
+            it('should return this $option if it is nonempty and applying the predicate $p to this $option\'s value returns false.', () => {
+                let a = some(42);
+                assert(a.filterNot(13).equals(some(42)));
+            });
 
-        it('should return $none if the option\'s value is empty.', () => {
-            let a = none;
-            assert(a.filterNot(_ => _ === 42).equals(none));
+            it('should return $none if it is nonempty, but applying the predicate $p to this $option\'s value returns true.', () => {
+                let a = some(42);
+                assert(a.filterNot(42).equals(none));
+            });
+
+            it('should return $none if the option\'s value is empty.', () => {
+                let a = none;
+                assert(a.filterNot(42).equals(none));
+            });
         });
     });
-
-    /*describe('withFilter', () => {
-        
-    });*/
 
     describe('contains', () => {
         it('should return true if some instance contains string "something" which equals "something".', () => {
