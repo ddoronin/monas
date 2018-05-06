@@ -40,18 +40,6 @@ describe('Option', () => {
         });
     });
 
-    describe('get()', () => {
-        it('should return the option\'s value.', () => {
-            let a = some('Hello, World!');
-            expect(a.get()).to.be.eq('Hello, World!');
-        });
-
-        it('should throw RangeError if the option is empty.', () => {
-            let a = none;
-            expect(a.get).throw(RangeError, 'none.get()');
-        });
-    });
-
     describe('getOrElse()', () => {
         it('should return the option\'s value if the option is nonempty.', () => {
             let a = some('something');
