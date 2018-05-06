@@ -1,5 +1,5 @@
 import { funcOrVal, FuncOrVal } from "./utils";
-import { none, Option, some } from "./Option";
+import { none, Option, some, $get } from "./Option";
 
 /**
  * Methods available only internally.
@@ -92,11 +92,11 @@ export abstract class Either<A, B> {
      *  Left(12).getOrElse(17)  // 17
      *  }}}
      */
-    getOrElse<B1 extends B>(or: FuncOrVal<B1>): B {
+    getOrElse<B1 extends B>(or: FuncOrVal<A, B1>): B {
         if (this[$isRight]) {
             return this[$getRight]();
         }
-        return funcOrVal(or);
+        return funcOrVal(or)(this[$getLeft]());
     }
 
     /** Returns `true` if this is a `Right` and its value is equal to `elem` (as determined by `===`),
@@ -186,9 +186,9 @@ export abstract class Either<A, B> {
      * Left(7).filterOrElse(_ => false, -1) // Left(7)
      * }}}
      */
-    filterOrElse(p: (b: B) => boolean, zero: FuncOrVal<A>): Either<A, B> {
+    filterOrElse(p: (b: B) => boolean, zero: FuncOrVal<B, A>): Either<A, B> {
         if (this[$isRight] && !p(this[$getRight]())) {
-            return left(funcOrVal(zero));
+            return left(funcOrVal(zero)(this[$getRight]()));
         }
         return this;
     }

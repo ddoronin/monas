@@ -33,9 +33,9 @@ export abstract class Option<A> {
      *
      * @param{FuncOrVal<B>} dft  the default expression.
      */
-    getOrElse<B extends A>(dft: FuncOrVal<B>): A|B {
+    getOrElse<B extends A>(dft: FuncOrVal<void, B>): A|B {
         if (this.isEmpty()) {
-            return funcOrVal(dft);
+            return funcOrVal(dft)(void 0);
         }
         return this[$get]();
     }

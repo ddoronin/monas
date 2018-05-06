@@ -16,15 +16,15 @@ describe('utils', () => {
         });
     });
 
-    describe('function funcOrVal<A>(f: FuncOrVal<A>): A', () => {
+    describe('function funcOrVal<A, B>(f: FuncOrVal<A, B>): (a: A)', () => {
         it('should handle a constant value', () => {
-            let f = funcOrVal<number>(42);
-            expect(f).to.be.eq(42);
+            let f = funcOrVal<null, number>(42);
+            expect(f(null)).to.be.eq(42);
         });
 
         it('should handle a func callback', () => {
-            let f = funcOrVal<number>(() => 42 * 2);
-            expect(f).to.be.eq(84);
+            let f = funcOrVal<void, number>(() => 42 * 2);
+            expect(f(void 0)).to.be.eq(84);
         });
     });
 });

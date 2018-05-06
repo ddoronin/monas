@@ -4,8 +4,8 @@ export function find<A>(array: A[], p: (a: A) => boolean): Option<A> {
     return some(array.find(p));
 }
 
-export type FuncOrVal<A> = (() => A) | A;
+export type FuncOrVal<A, B> = ((a: A) => B) | B;
 
-export function funcOrVal<A>(f: FuncOrVal<A>): A {
-    return (typeof f === 'function') ? f() : f;
+export function funcOrVal<A, B>(f: FuncOrVal<A, B>): (a: A) => B {
+    return (a: A) => (typeof f === 'function' ? f(a) : f);
 }

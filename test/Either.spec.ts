@@ -75,6 +75,10 @@ describe('Either', () => {
         it('should return an alternative value if this is `Left`.', () => {
             expect(left(42).getOrElse(13)).to.be.eq(13);
         });
+
+        it('should return a map of alternative value if this is `Left`.', () => {
+            expect(left(13).getOrElse((num) => num * 2)).to.be.eq(26);
+        });
     });
 
     describe('contains', () => {
