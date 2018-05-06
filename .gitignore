@@ -68,3 +68,4 @@ lib
 coverage
 .nyc_output
 .coveralls.yml
+docs
