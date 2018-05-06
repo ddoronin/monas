@@ -4,9 +4,9 @@ import { none, Option, some } from "./Option";
 /**
  * Methods available only internally.
  */
-const $isRight = Symbol('isRight');
-const $getLeft = Symbol('getLeft');
-const $getRight = Symbol('getRight');
+export const $isRight = Symbol('isRight');
+export const $getLeft = Symbol('getLeft');
+export const $getRight = Symbol('getRight');
 
 export abstract class Either<A, B> {
 

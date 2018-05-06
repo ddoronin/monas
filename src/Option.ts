@@ -5,7 +5,7 @@ import { FuncOrVal, funcOrVal } from './utils';
  * It's not exposed to a client with intention to not allow having 
  * null and undefined values while working with the `Option` monad.
  */
-const $get = Symbol('get');
+export const $get = Symbol('get');
 
 export abstract class Option<A> {
     /**
