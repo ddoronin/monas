@@ -50,13 +50,7 @@ let absentGreeting: Option<string> = some(null) // absentGreeting will be none
 
 There are several ways of getting an Option value:
 
-a) the easiest but NOT recommended way.
-```typescript
-let str: String = greeting.get();
-// if greeting is None, it will throw RangeError('none.get()').
-```
-
-b) it's recommended to call `getOrElse()` function.
+a) Call `getOrElse()`:
 ```typescript
 let str: String = greeting.getOrElse(''); 
 // if greeting is None, it will return an empty string.
@@ -82,7 +76,7 @@ The most idiomatic way to use an `Option` instance is to treat it as a collectio
 Let's consider an example where for a given country code we need to find the country name or print "N/A" if it's not found. 
 
 ```typescript
-import { Option, none, some} from './Option';
+import { Option, none, some } from './Option';
 
 type Country = { name: string, code: number };
 let countries: Country[] = [{ name: 'United States', code: 1 }, { name: 'United Kingdom', code: 44 }];
@@ -135,7 +129,7 @@ let eitherNumber: Either<string, number> = left('Not a number'); // equivalent t
 
 ### Extracting values from `Either`
 
-`Either` is right-biased, which means that `Right` is assumed to be the default case to operate on. 
+`Either` is a right-biased monad, which means that `Right` is assumed to be the default case to operate on. 
 If it is `Left`, operations like `map` and `flatMap` return the `Left` value unchanged:
 
 ```typescript
@@ -152,7 +146,20 @@ left<number, string>('').map(_ => _ * 2).getOrElse(-1);  // -1
 //                       won't be applied since it's left
 ```
 
-`Either` can be swapped in order to work with useful info from `Left`, e.g.:
+In the same time `Either` working with the `Left` part could be easy and isomorphic, consider this example:
+
+```typescript
+function print(numberOrError: Either<Error, number>) {
+    numberOrError
+        .map(num => num)
+        .foreach(printNumber)
+        // For the `Left` part just add suffix Left
+        .mapLeft(err => err.message)
+        .foreachLeft(printError);
+}
+```
+
+If there is a need to work with `Left` as with `Right`, the `swap()` function could be used.
 
 ```typescript
 left<number, string>('useful info').swap().getOrElse('');  // useful info
