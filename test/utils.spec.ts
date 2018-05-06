@@ -12,7 +12,7 @@ describe('utils', () => {
         it('should return $some if something\'s been found', () => {
             let arr = [1, 2, 3, 4, 5];
             let a = find(arr, _ => _ === 4);
-            expect(a.get()).to.be.eq(4);
+            expect(a.getOrElse(-1)).to.be.eq(4);
         });
     });
 
