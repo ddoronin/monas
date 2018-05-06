@@ -1,13 +1,20 @@
 import { funcOrVal, FuncOrVal } from "./utils";
 import { none, Option, some } from "./Option";
 
+/**
+ * Methods available only internally.
+ */
+const $isRight = Symbol('isRight');
+const $getLeft = Symbol('getLeft');
+const $getRight = Symbol('getRight');
+
 export abstract class Either<A, B> {
 
-    protected abstract readonly isRight: boolean;
+    protected abstract readonly [$isRight]: boolean;
 
-    protected abstract getLeft(): A;
+    protected abstract [$getLeft](): A;
 
-    protected abstract getRight(): B;
+    protected abstract [$getRight](): B;
 
     /** Applies `fa` if this is a `Left` or `fb` if this is a `Right`.
      *
@@ -24,10 +31,10 @@ export abstract class Either<A, B> {
      *  @return the results of applying the function
      */
     fold<C>(fa: (a: A) => C, fb: (b: B) => C): C {
-        if (this.isRight) {
-            return fb(this.getRight());
+        if (this[$isRight]) {
+            return fb(this[$getRight]());
         }
-        return fa(this.getLeft());
+        return fa(this[$getLeft]());
     }
 
     /** If this is a `Left`, then return the left value in `Right` or vice versa.
@@ -46,12 +53,11 @@ export abstract class Either<A, B> {
      *  }}}
      */
     swap(): Either<B, A> {
-        if (this.isRight) {
-            return left(this.getRight());
+        if (this[$isRight]) {
+            return left(this[$getRight]());
         }
-        return right(this.getLeft());
+        return right(this[$getLeft]());
     }
-
 
     /** Executes the given side-effecting function if this is a `Right`.
      *
@@ -61,10 +67,22 @@ export abstract class Either<A, B> {
      *  }}}
      *  @param f The side-effecting function to execute.
      */
-    foreach<U>(f: (b: B) => U): void {
-        if (this.isRight) {
-            f(this.getRight());
+    foreach<U>(f: (b: B) => U): Either<A, B> {
+        if (this[$isRight]) {
+            f(this[$getRight]());
         }
+        return this;
+    }
+
+    /**
+     * Executes the given side-effecting function if this is a `Left`.
+     * @param f The side-effecting function to execute.
+     */
+    foreachLeft<V>(f: (a: A) => V): Either<A, B> {
+        if (!this[$isRight]) {
+            f(this[$getLeft]());
+        }
+        return this;
     }
 
     /** Returns the value from this `Right` or the given argument if this is a `Left`.
@@ -75,14 +93,13 @@ export abstract class Either<A, B> {
      *  }}}
      */
     getOrElse<B1 extends B>(or: FuncOrVal<B1>): B {
-        if (this.isRight) {
-            return this.getRight();
+        if (this[$isRight]) {
+            return this[$getRight]();
         }
         return funcOrVal(or);
     }
 
-
-    /** Returns `true` if this is a `Right` and its value is equal to `elem` (as determined by `==`),
+    /** Returns `true` if this is a `Right` and its value is equal to `elem` (as determined by `===`),
      *  returns `false` otherwise.
      *
      *  {{{
@@ -100,7 +117,15 @@ export abstract class Either<A, B> {
      *  @return `true` if this is a `Right` value equal to `elem`.
      */
     contains<B1 extends B>(elem: B1): boolean {
-        return this.isRight && this.getRight() === elem;
+        return this[$isRight] && this[$getRight]() === elem;
+    }
+
+    /**
+     * Returns `true` if this is a `Left` and its value is equal to `elem`.
+     * @param elem
+     */
+    containsLeft<A1 extends A>(elem: A1): boolean {
+        return !this[$isRight] && this[$getLeft]() === elem;
     }
 
     /** Returns `false` if `Left` or returns the result of the application of
@@ -113,7 +138,16 @@ export abstract class Either<A, B> {
      *  }}}
      */
     exists(p: (b: B) => boolean): boolean {
-        return this.isRight && p(this.getRight());
+        return this[$isRight] && p(this[$getRight]());
+    }
+
+    /**
+     * Returns `false` if `Right` or returns the result of the application or 
+     * the given predicate to the `Left` value.
+     * @param p
+     */
+    existsLeft(p: (a: A) => boolean): boolean {
+        return !this[$isRight] && p(this[$getLeft]());
     }
 
     /** The given function is applied if this is a `Right`.
@@ -124,12 +158,22 @@ export abstract class Either<A, B> {
      *  }}}
      */
     map<B1>(f: (b: B) => B1): Either<A, B1> {
-        if (this.isRight) {
-            return right(f(this.getRight()));
+        if (this[$isRight]) {
+            return right(f(this[$getRight]()));
         }
-        return left(this.getLeft());
+        return left(this[$getLeft]());
     }
 
+    /**
+     * The given function is applied if this is a `Left`.
+     * @param f
+     */
+    mapLeft<A1>(f: (a: A) => A1): Either<A1, B> {
+        if (!this[$isRight]) {
+            return left(f(this[$getLeft]()));
+        }
+        return right(this[$getRight]());
+    }
 
     /** Returns `Right` with the existing value of `Right` if this is a `Right`
      *  and the given predicate `p` holds for the right value,
@@ -143,7 +187,7 @@ export abstract class Either<A, B> {
      * }}}
      */
     filterOrElse(p: (b: B) => boolean, zero: FuncOrVal<A>): Either<A, B> {
-        if (this.isRight && !p(this.getRight())) {
+        if (this[$isRight] && !p(this[$getRight]())) {
             return left(funcOrVal(zero));
         }
         return this;
@@ -158,8 +202,8 @@ export abstract class Either<A, B> {
      * }}}
      */
     toOption(): Option<B> {
-        if (this.isRight) {
-            return some(this.getRight());
+        if (this[$isRight]) {
+            return some(this[$getRight]());
         }
         return none;
     }
@@ -183,8 +227,8 @@ export abstract class Either<A, B> {
     }
 
     [Symbol.iterator] = function* () {
-        if (this.isRight) {
-            yield this.getRight();
+        if (this[$isRight]) {
+            yield this[$getRight]();
         }
     }
 }
@@ -192,13 +236,13 @@ export abstract class Either<A, B> {
 /** The left side of the disjoint union.
  */
 export class Left<A, B> extends Either<A, B> {
-    protected readonly isRight: false;
+    protected readonly [$isRight]: false;
 
-    protected getLeft(): A {
+    protected [$getLeft](): A {
         return this.x;
     }
 
-    protected getRight(): B {
+    protected [$getRight](): B {
         throw new RangeError('Left.getRight()');
     }
 
@@ -214,13 +258,13 @@ export function left<A, B>(x: A): Either<A, B> {
 /** The right side of the disjoint union.
  */
 export class Right<A, B> extends Either<A, B> {
-    protected readonly isRight: boolean = true;
+    protected readonly [$isRight]: boolean = true;
 
-    protected getLeft(): A {
+    protected [$getLeft](): A {
         throw new RangeError('Right.getLeft()');
     }
 
-    protected getRight(): B {
+    protected [$getRight](): B {
         return this.x;
     }
 

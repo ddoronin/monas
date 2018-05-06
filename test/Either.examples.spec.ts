@@ -1,4 +1,5 @@
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
+import { spy } from 'sinon';
 import { Either, left, right } from '../src/Either';
 
 describe('Either examples', () => {
@@ -50,6 +51,36 @@ describe('Either examples', () => {
 
         it('should return `Left` if age is out of range', () => {
             expect(validateAge('10')).to.deep.eq(left(`The age should be in range between ${AGE_MIN} and ${AGE_MAX}.`));
+        });
+    });
+
+    describe('Example #3: working with `Left`', () => {
+        let printNumber;
+        let printError;
+
+        function print(numberOrError: Either<Error, number>) {
+            numberOrError
+                .map(num => num)
+                .foreach(printNumber)
+                .mapLeft(err => err.message)
+                .foreachLeft(printError);
+        }
+
+        beforeEach(() => {
+            printNumber = spy();
+            printError = spy();
+        });
+
+        it('should print an error message', () => {
+            let numberOrError: Either<Error, number> = left(new RangeError('It\'s not a number.'));
+            print(numberOrError);
+            assert(printError.calledWith('It\'s not a number.'));
+        });
+
+        it('should print a number', () => {
+            let numberOrError: Either<Error, number> = right(42);
+            print(numberOrError);
+            assert(printNumber.calledWith(42));
         });
     });
 });

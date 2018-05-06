@@ -53,6 +53,20 @@ describe('Either', () => {
         });
     });
 
+    describe('foreachLeft', () => {
+        it('should execute the given side-effecting function if this is a `Left`.', () => {
+            let print = spy();
+            left(42).foreachLeft(_ => print(_));
+            assert(print.calledWith(42));
+        });
+
+        it('should not execute the given side-effecting function if this is a `Right`.', () => {
+            let print = spy();
+            right(42).foreachLeft(_ => print(_));
+            assert(print.notCalled);
+        });
+    });
+
     describe('getOrElse', () => {
         it('should return the value from this `Right`.', () => {
             expect(right(42).getOrElse(13)).to.be.eq(42);
@@ -71,11 +85,27 @@ describe('Either', () => {
         });
     });
 
+    describe('containsLeft', () => {
+        it('should return `true` if this is a `Left` and its value is equal to `elem`.', () => {
+            assert(left(42).containsLeft(42));
+            assert(!left(42).containsLeft(12));
+            assert(!right(42).containsLeft(42));
+        });
+    });
+
     describe('exists', () => {
         it('should return `false` if `Left` or returns the result of the application of the given predicate to the `Right` value.', () => {
             assert(right(12).exists(_ => _ > 10));
             assert(!right(7).exists(_ => _ > 10));
             assert(!left(42).exists(() => true));
+        });
+    });
+
+    describe('existsLeft', () => {
+        it('should return `false` if `Right` or returns the result of the application of the given predicate to the `Left` value.', () => {
+            assert(left(12).existsLeft(_ => _ > 10));
+            assert(!left(7).existsLeft(_ => _ > 10));
+            assert(!right(42).existsLeft(() => true));
         });
     });
 
@@ -86,6 +116,16 @@ describe('Either', () => {
 
         it('should not apply the given function if this is a `Left`.', () => {
             expect(left('hello').map(_ => _ + ' world!')).to.be.deep.eq(left('hello'));
+        });
+    });
+
+    describe('mapLeft', () => {
+        it('should apply the given function if this is a `Left`.', () => {
+            expect(left('hello').mapLeft(_ => _ + ' world!')).to.be.deep.eq(left('hello world!'));
+        });
+
+        it('should not apply the given function if this is a `Right`.', () => {
+            expect(right('hello').mapLeft(_ => _ + ' world!')).to.be.deep.eq(right('hello'));
         });
     });
 
