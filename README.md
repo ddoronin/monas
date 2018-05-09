@@ -1,15 +1,17 @@
-# **_`Ninja Types`_**  _inspired by Scala_ [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/scala-spiral.png" alt="Scala" width="20px"/>](http://www.scala-lang.org/), _developed for Ninjas_ [<img src="https://github.com/ddoronin/ninja-types/blob/master/assets/ninja.png" alt="Ninja" width="48px"/>]()
+[<img src="https://github.com/ddoronin/monas/blob/master/assets/monad.png" alt="μονάς - Scala like monads for javascript" width="40px"/>]
+
+# **_`Monas`_**  _inspired by Scala_ [<img src="https://github.com/ddoronin/monas/blob/master/assets/scala-spiral.png" alt="Scala" width="20px"/>](http://www.scala-lang.org/), _developed for Ninjas_ [<img src="https://github.com/ddoronin/monas/blob/master/assets/ninja.png" alt="Ninja" width="48px"/>]()
 
 _introduces fundamental monads: `Option<A>` and `Either<A, B>` - for Javascript Ninjas._
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/ninja-types/blob/master/LICENSE) 
-[![npm version](https://img.shields.io/npm/v/ninja-types.svg?style=flat)](https://www.npmjs.com/package/ninja-types) 
-[![Build Status](https://travis-ci.org/ddoronin/ninja-types.svg?branch=master)](https://travis-ci.org/ddoronin/ninja-types) 
-[![Coverage Status](https://coveralls.io/repos/github/ddoronin/ninja-types/badge.svg)](https://coveralls.io/github/ddoronin/ninja-types) 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/monas/blob/master/LICENSE) 
+[![npm version](https://img.shields.io/npm/v/monas.svg?style=flat)](https://www.npmjs.com/package/monas) 
+[![Build Status](https://travis-ci.org/ddoronin/monas.svg?branch=master)](https://travis-ci.org/ddoronin/monas) 
+[![Coverage Status](https://coveralls.io/repos/github/ddoronin/monas/badge.svg)](https://coveralls.io/github/ddoronin/monas) 
 [![Slack chat](https://now-examples-slackin-fpiresrxzs.now.sh/badge.svg)](https://now-examples-slackin-fpiresrxzs.now.sh) 
 
 ```
-npm install ninja-types
+npm install monas
 ```
 
 ## Option&lt;A>
@@ -92,7 +94,7 @@ function getNameByCode(code: number): string {
 }
 ```
 
-More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/test/Option.examples.spec.ts).
+More examples could be found [here](https://github.com/ddoronin/monas/blob/master/test/Option.examples.spec.ts).
 
 ## Either&lt;A, B>
 
@@ -178,7 +180,7 @@ for(let num of eitherNumber) {
 }
 ```
 
-More examples could be found [here](https://github.com/ddoronin/ninja-types/blob/master/test/Either.examples.spec.ts).
+More examples could be found [here](https://github.com/ddoronin/monas/blob/master/test/Either.examples.spec.ts).
 
 ## License
 

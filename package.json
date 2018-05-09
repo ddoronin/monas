@@ -1,7 +1,7 @@
 {
-  "name": "ninja-types",
+  "name": "monas",
   "version": "0.1.1",
-  "description": "Typescript Monads For Javascript Ninjas",
+  "description": "Scala like monads for javascript",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -30,14 +30,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ddoronin/ninja-types.git"
+    "url": "git+https://github.com/ddoronin/monas.git"
   },
   "author": "Dima Doronin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ddoronin/ninja-types/issues"
+    "url": "https://github.com/ddoronin/monas/issues"
   },
-  "homepage": "https://github.com/ddoronin/ninja-types#readme",
+  "homepage": "https://github.com/ddoronin/monas#readme",
   "dependencies": {
     "typescript": "^2.8.1"
   },
