@@ -7,7 +7,7 @@ _introduces fundamental monads: `Option<A>` and `Either<A, B>` - for Javascript 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/monas/blob/master/LICENSE) 
 [![npm version](https://img.shields.io/npm/v/monas.svg?style=flat)](https://www.npmjs.com/package/monas) 
 [![Build Status](https://travis-ci.org/ddoronin/monas.svg?branch=master)](https://travis-ci.org/ddoronin/monas) 
-[![Coverage Status](https://coveralls.io/repos/github/ddoronin/monas/badge.svg)](https://coveralls.io/github/ddoronin/monas) 
+[![Coverage Status](https://coveralls.io/repos/github/ddoronin/monas/badge.svg?branch=master)](https://coveralls.io/github/ddoronin/monas?branch=master)
 [![Slack chat](https://now-examples-slackin-fpiresrxzs.now.sh/badge.svg)](https://now-examples-slackin-fpiresrxzs.now.sh) 
 
 ```
