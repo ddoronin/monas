@@ -1,6 +1,6 @@
 # <a href='https://ddoronin.github.io/monas/'><img src="https://github.com/ddoronin/monas/blob/master/assets/Monas.png" alt="μονάς - Scala like monads for javascript" height="80px"/></a>
 
-Monas (from Greek μονάς - "singularity") is a monad library for JavaScript apps. It's been inspired by Scala [<img src="https://github.com/ddoronin/monas/blob/master/assets/scala-spiral.png" alt="Scala" width="20px"/>](http://www.scala-lang.org/) and developed with TypeScript. Monas introduces fundamental monads: `Option<A>` and `Either<A, B>`.
+Monas (from Greek μονάς - "singularity") is a monad library for JavaScript apps. It's been inspired by [Scala](https://www.scala-lang.org) and developed with [TypeScript](http://www.typescriptlang.org). Monas introduces fundamental monads: `Option<A>` and `Either<A, B>`.
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/monas/blob/master/LICENSE) 
 [![npm version](https://img.shields.io/npm/v/monas.svg?style=flat)](https://www.npmjs.com/package/monas) 
