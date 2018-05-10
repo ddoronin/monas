@@ -1,4 +1,4 @@
-<img src="https://github.com/ddoronin/monas/blob/master/assets/Monas.png" alt="μονάς - Scala like monads for javascript" width="80px"/>
+<img src="https://github.com/ddoronin/monas/blob/master/assets/Monas.png" alt="μονάς - Scala like monads for javascript" height="80px"/>
 
 # _inspired by Scala_ [<img src="https://github.com/ddoronin/monas/blob/master/assets/scala-spiral.png" alt="Scala" width="20px"/>](http://www.scala-lang.org/), _developed for Ninjas_ [<img src="https://github.com/ddoronin/monas/blob/master/assets/ninja.png" alt="Ninja" width="48px"/>]()
 
