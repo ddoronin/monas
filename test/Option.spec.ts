@@ -1,8 +1,30 @@
 import { expect, assert } from 'chai';
 import { spy } from 'sinon';
-import { Option, some, none } from '../src/Option';
+import { Option, option, some, none } from '../src/Option';
 
 describe('Option', () => {
+    describe('option()', () => {
+        it('should return some if the value is not null', () => {
+            let smth: Option<number> = option(42);
+            expect(smth.getOrElse(-1)).to.eq(42);
+        });
+
+        it('should return some if the value is not null even if it\'s boolean false', () => {
+            let smth: Option<boolean> = option(false);
+            expect(smth.getOrElse(true)).to.eq(false);
+        });
+
+        it('should return none if the value is null', () => {
+            let smth: Option<number> = option(null);
+            expect(smth).to.eq(none as Option<number>);
+        });
+
+
+        it('should return none if the value is undefined', () => {
+            let smth: Option<number> = option(undefined);
+            expect(smth).to.eq(none as Option<number>);
+        });
+    });
 
     describe('isEmpty()', () => {
         it('should return true if the option is $none, false otherwise.', () => {

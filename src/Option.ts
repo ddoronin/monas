@@ -218,9 +218,6 @@ export class Some<A> extends Option<A>{
     }
 }
 
-// It would make sense to have None of type `never`, 
-// but it could break nice compiler instructions 
-// when getOrElse() is called for example.
 export class None<A> extends Option<A>{
     isEmpty(): boolean{
         return true;
@@ -239,3 +236,6 @@ export const some = <A>(x: A): Option<A> => {
     }
     return new Some(x);
 };
+
+// alias
+export const option = some;
