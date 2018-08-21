@@ -305,4 +305,50 @@ describe('Option', () => {
             print.calledWith('thing');
         });
     });
+
+    describe('onSome()', () => {
+        it('should apply the given procedure $f to the option\'s value, if it is nonempty. Otherwise, do nothing.', () => {
+            let print = spy();
+            some(42).onSome(_ => print(_));
+            assert(print.calledWith(42));
+        });
+
+        it('should not apply the given procedure $f if option is none.', () => {
+            let print = spy();
+            none.onSome(_ => print(_));
+            assert(print.notCalled);
+        });
+    });
+
+    describe('onNone()', () => {
+        it('should apply the given procedure $f to the option\'s value, if it is $none. Do nothing for $some.', () => {
+            let print = spy();
+            none.onNone(() => print('Hello, None!'));
+            assert(print.calledWith('Hello, None!'));
+        });
+
+        it('should not apply the given procedure $f if option is $some.', () => {
+            let print = spy();
+            some(42).onNone(() => print(42));
+            assert(print.notCalled);
+        });
+    });
+
+    describe('onSome() and onNone() chained', () => {
+        it('some', () => {
+            let print = spy();
+            some(42)
+                .onSome(_ => print(_))
+                .onNone(() => print('none'));
+            assert(print.calledWith(42));
+        });
+
+        it('none', () => {
+            let print = spy();
+            some(null)
+                .onSome(_ => print(_))
+                .onNone(() => print('none'));
+            assert(print.calledWith('none'));
+        });
+    });
 });

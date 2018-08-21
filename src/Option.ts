@@ -191,6 +191,16 @@ export abstract class Option<A> {
         return this;
     }
 
+    onSome<B>(f: (a: A) => B): Option<A> {
+        this.foreach(f);
+        return this;
+    }
+
+    onNone<B>(f: () => B): Option<A> {
+        if (this.isEmpty()) f();
+        return this;
+    }
+
     equals(target: Option<A>): boolean {
         return (
             this.isDefined() && target.isDefined() && this[$get]() === target[$get]()
