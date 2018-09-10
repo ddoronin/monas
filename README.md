@@ -180,6 +180,12 @@ for(let num of eitherNumber) {
 
 More examples could be found [here](https://github.com/ddoronin/monas/blob/master/test/Either.examples.spec.ts).
 
+## Docs
+
+1. Medium
+  [Monas — Scala monads for javascript](https://medium.com/@dmitrydoronin/monas-scala-monads-for-javascript-1e9cd7e82113)
+
+
 ## License
 
 MIT
