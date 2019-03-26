@@ -241,11 +241,11 @@ export class None<A> extends Option<A>{
 
 export const none = new None<any>();
 
-export const some = <A>(x: A|null): Option<A> => {
+export const some = <A>(x?: A): Option<NonNullable<A>> => {
     if(x === null || typeof x === 'undefined'){
-        return none as Option<A>;
+        return none as Option<NonNullable<A>>;
     }
-    return new Some(x);
+    return new Some(x as NonNullable<A>);
 };
 
 // alias

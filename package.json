@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/ddoronin/monas#readme",
   "dependencies": {
-    "typescript": "^2.8.1"
+    "typescript": "^3.3.4"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
