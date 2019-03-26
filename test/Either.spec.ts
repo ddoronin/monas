@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 import { spy } from 'sinon';
-import { Either, left, right } from '../src/Either';
+import { Either, left, right, $getLeft, $getRight } from '../src/Either';
 import { none, some } from '../src/Option';
 
 describe('Either', () => {
@@ -78,6 +78,24 @@ describe('Either', () => {
 
         it('should return a map of alternative value if this is `Left`.', () => {
             expect(left(13).getOrElse((num) => num * 2)).to.be.eq(26);
+        });
+    });
+
+    describe('get', () => {
+        it('should return the value from this `Right`.', () => {
+            expect(right(42)[$getRight]()).to.be.eq(42);
+        });
+
+        it('should throw an exception when trying to get left of the `Right`.', () => {
+            expect(right(42)[$getLeft]).to.throw();
+        });
+
+        it('should return the value from this `Left`.', () => {
+            expect(left(42)[$getLeft]()).to.be.eq(42);
+        });
+
+        it('should throw an exception when trying to get right of the `Left`.', () => {
+            expect(left(42)[$getRight]).to.throw();
         });
     });
 

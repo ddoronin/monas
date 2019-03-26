@@ -120,8 +120,8 @@ describe('Option', () => {
         });
 
         it('should evaluate expression `ifEmpty` if the $option is empty.', () => {
-            let a = some('thing');
-            expect(a.fold(() => 'nothing', _ =>'some' + _)).to.be.eq('something');
+            let a = some(null);
+            expect(a.fold(() => 'nothing', _ =>'some' + _)).to.be.eq('nothing');
         });
     });
 
