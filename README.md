@@ -1,6 +1,6 @@
-# <a href='https://ddoronin.github.io/monas/'><img src="https://github.com/ddoronin/monas/blob/master/assets/Monas.png" alt="μονάς - Scala like monads for javascript" height="80px"/></a>
+# <a href='https://ddoronin.github.io/monas/'><img src="https://github.com/ddoronin/monas/raw/master/assets/Monas.png" alt="μονάς - Scala like monads for javascript" height="80px"/></a>
 
-Monas (from Greek μονάς - "singularity") is a monad library for JavaScript apps. It's been inspired by [Scala](https://www.scala-lang.org) and developed with [TypeScript](http://www.typescriptlang.org). Monas introduces fundamental monads: `Option<A>` and `Either<A, B>`.
+Monas (from Greek μονάς - "singularity") is a monad library for JavaScript apps. It's been inspired by [Scala](https://www.scala-lang.org) and developed with [TypeScript](http://www.typescriptlang.org). Monas introduces two fundamental monads: `Option<A>` and `Either<A, B>`.
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ddoronin/monas/blob/master/LICENSE) 
 [![npm version](https://img.shields.io/npm/v/monas.svg?style=flat)](https://www.npmjs.com/package/monas) 
@@ -8,8 +8,8 @@ Monas (from Greek μονάς - "singularity") is a monad library for JavaScript 
 [![Coverage Status](https://coveralls.io/repos/github/ddoronin/monas/badge.svg?branch=master)](https://coveralls.io/github/ddoronin/monas?branch=master)
 [![Slack chat](https://now-examples-slackin-fpiresrxzs.now.sh/badge.svg)](https://now-examples-slackin-fpiresrxzs.now.sh) 
 
-```
-npm install monas
+```bash
+$ yarn add monas
 ```
 
 ## Option&lt;A>
@@ -26,50 +26,41 @@ The idea is to get rid of `null` and `undefined` and, thus, eliminate null point
 | `some<A>(x: A): Option<A>` | a helper function instantiating objects of type `Some` or `None` based on a provided value.|
 | `none: Option<A>` | a single instance of `None<A>`. |
 
-### Creating an option
-
-Usually, you can simply create an `Option<A>` for a present value by directly calling `some()` function:
 
 ```typescript
 let greeting: Option<string> = some('Hello world');
+greeting = some(null); // will be none
+assert(greeting === none);
+```
+`some()` will return `none` if a given argument is `null` or `undefined`:
+
+Reading data from `Option`:
+
+a) `getOrElse()`:
+```typescript
+let str: string = greeting.getOrElse(''); 
+// Returns greeting or empty string if none.
 ```
 
-Or, if you know that the value is absent, you simply assign or return the None object:
-
+b) `get()`:
 ```typescript
-let greeting: Option<string> = none;
+let str: string = greeting.get(); 
+// Returns greeting or throws an exception.
 ```
 
-The function `some()` is smart and returns `none` if a given parameter is null or undefined:
-
+c) Using `Symbol.Iterable`:
 ```typescript
-let absentGreeting: Option<string> = some(null) // absentGreeting will be none
+let [str]: string = [...greeting]; 
+// returns ["something"] or empty array [] if none.
 ```
-
-### Getting an option value
-
-There are several ways of getting an Option value:
-
-a) Call `getOrElse()`:
+OR
 ```typescript
-let str: String = greeting.getOrElse(''); 
-// if greeting is None, it will return an empty string.
-```
-
-c) class `Option` implements `Symbol.Iterable`, so there is a cute funny way for getting an option value:
-```typescript
-let [str]: String = [...greeting]; 
-// a result of this spread operator will be either an array of one element if Option is Some 
-// or an empty array if it's None.
-```
-d) and the last but not least approach should make full-metal Javascript Ninjas cry in happiness:
-```typescript
-for(let str: String of greeting) {
-    // this will be executed only is greeting has Some value.
+for(let str: string of greeting) {
+    assert(str, "something");
 }
 ```
 
-### Working with options
+### Examples
 
 The most idiomatic way to use an `Option` instance is to treat it as a collection or monad and use map, flatMap, filter, or foreach.
 
@@ -113,68 +104,57 @@ Generally `Either` can be considered as an alternative to `Option` where instead
 It turns out that `Either` is a power-full type for validations 
 since it can return either a successfully parsed value, or a validation error.
 
-### Creating an either
-
-Usually, you can simply create an `Either<A, B>` by directly calling `right()` or `left()` helper functions:
+`Either<A, B>` can be instantiated by calling `right(something)` or `left(error)`:
 
 ```typescript
-let eitherNumber: Either<string, number> = right(42); // equivalent to new Right(42)
+let eitherNumber: Either<Error, number> = right(42); // equivalent to new Right(42)
 ```
 
-or
+OR
 
 ```typescript
-let eitherNumber: Either<string, number> = left('Not a number'); // equivalent to new Left('Not a number')
+let eitherNumber: Either<Error, number> = left(Error('Not a number')); // equivalent to new Left('Not a number')
 ```
 
-### Extracting values from `Either`
-
-`Either` is a right-biased monad, which means that `Right` is assumed to be the default case to operate on. 
-If it is `Left`, operations like `map` and `flatMap` return the `Left` value unchanged:
-
+`Either` is a right-biased monad:
 ```typescript
-right<number, string>(42).map(_ => _ * 2).getOrElse(-1); // 84
-//                        ^^^             ^^^ will get 84 from the right 
-//                        map will be applied to the right part 
+let eitherNum: Either<number, Error> = right<number, Error>(42);
+eitherNum.map(num => num * 2).getOrElse(-1);
+// returns 84
 ```
-
-or
-
+Another example:
 ```typescript
-left<number, string>('').map(_ => _ * 2).getOrElse(-1);  // -1
-//                       ^^^             ^^^ will print -1 because there's no any right
-//                       won't be applied since it's left
+let eitherNum: Either<number, Error> = left<number, Error>(Error('Not a number.'));
+eitherNum.map(_ => _ * 2).getOrElse(-1);
+// returns -1
 ```
-
-In the same time `Either` working with the `Left` part could be easy and isomorphic, consider this example:
+Use `mapLeft()`, `foreachLeft()` to handle `Left` values:
 
 ```typescript
 function print(numberOrError: Either<Error, number>) {
     numberOrError
         .map(num => num)
         .foreach(printNumber)
-        // For the `Left` part just add suffix Left
         .mapLeft(err => err.message)
         .foreachLeft(printError);
 }
 ```
 
-If there is a need to work with `Left` as with `Right`, the `swap()` function could be used.
+Use `swap()` function to swap `Left` and `Right`.
 
 ```typescript
-left<number, string>('useful info').swap().getOrElse('');  // useful info
-//                                  /^^^   ^^^ here 'useful info' is "right" 
-//             swap Left and Right /
+left<number, string>('Not a number').swap().getOrElse('');
+// returns 'Not a number'
 ```
 
-For hardcore Javascript Ninjas `Either` implements `Symbol.Iterable`, so enjoy:
+`Either` implements `Symbol.Iterable`:
 ```typescript
-let eitherNumber = right<number, string>(42).map(_ => _ * 2);
+let eitherNumber = right<number, Error>(42).map(_ => _ * 2);
 
 let [n] = [...eitherNumber]; // n === 42
 
 for(let num of eitherNumber) {
-    // for ensures that the num will be 42
+    assert(num, 42);
 }
 ```
 
