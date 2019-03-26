@@ -1,11 +1,4 @@
-import { FuncOrVal, funcOrVal } from './utils';
-
-/**
- * Really private method name to be used internally.
- * It's not exposed to a client with intention to not allow having 
- * null and undefined values while working with the `Option` monad.
- */
-export const $get = Symbol('get');
+import { FuncOrVal, funcOrVal, isFunction } from './utils';
 
 export abstract class Option<A> {
     /**
@@ -25,7 +18,7 @@ export abstract class Option<A> {
      * @note The option must be nonempty.
      * @throws RangeError if the option is empty.
      */
-    protected abstract [$get](): A
+    abstract get(): A
 
     /**
      * Returns the option's value if the option is nonempty, otherwise
@@ -37,7 +30,7 @@ export abstract class Option<A> {
         if (this.isEmpty()) {
             return funcOrVal(dft)(void 0);
         }
-        return this[$get]();
+        return this.get();
     }
 
     /**
@@ -63,7 +56,7 @@ export abstract class Option<A> {
      * @see foreach
      */
     map<B>(f: (a: A) => B): Option<B> {
-        return this.isEmpty() ? none : some<B>(f(this[$get]()))
+        return this.isEmpty() ? none : some<B>(f(this.get()))
     }
 
     /**
@@ -77,7 +70,7 @@ export abstract class Option<A> {
      * @param  f       the function to apply if nonempty.
      */
     fold<B>(ifEmpty: () => B, f: (a: A) => B): B {
-        return this.isEmpty() ? ifEmpty(): f(this[$get]());
+        return this.isEmpty() ? ifEmpty(): f(this.get());
     }
 
     /**
@@ -92,7 +85,7 @@ export abstract class Option<A> {
      * @see foreach
      */
     flatMap<B>(f: (a: A) => Option<B>): Option<B>{
-        return this.isEmpty() ? none : f(this[$get]());
+        return this.isEmpty() ? none : f(this.get());
     }
 
     /**
@@ -102,8 +95,12 @@ export abstract class Option<A> {
      * @param  p   the predicate used for testing.
      */
     filter(p: ((a: A) => boolean) | A): Option<A> {
-        const f = typeof p === 'function' ? p : (_: A) => _ === p;
-        return (this.nonEmpty() && f(this[$get]())) ? this : none;
+        return this.flatMap(val => {
+            if (isFunction(p)) {
+                return p(val) === true ? some(val): none;
+            }
+            return p === val? some(val): none;
+        });
     }
 
     /**
@@ -113,8 +110,12 @@ export abstract class Option<A> {
      * @param  p   the predicate used for testing.
      */
     filterNot(p: ((a: A) => boolean) | A): Option<A> {
-        const f = typeof p === 'function' ? p : (_: A) => _ === p;
-        return (this.isEmpty() || !f(this[$get]())) ? this : none;
+        return this.flatMap(val => {
+            if (isFunction(p)) {
+                return p(val) === false ? some(val): none;
+            }
+            return p !== val? some(val): none;
+        });
     }
 
     /**
@@ -143,7 +144,7 @@ export abstract class Option<A> {
      *  determined by `==`) to `elem`, `false` otherwise.
      */
     contains(elem: A): boolean {
-        return !this.isEmpty() && this[$get]() === elem;
+        return !this.isEmpty() && this.get() === elem;
     }
 
     /**
@@ -154,7 +155,7 @@ export abstract class Option<A> {
      * @param  p   the predicate to test
      */
     exists(p: (a: A) => boolean): boolean {
-        return !this.isEmpty() && p(this[$get]());
+        return !this.isEmpty() && p(this.get());
     }
 
     /**
@@ -164,7 +165,7 @@ export abstract class Option<A> {
      * @param  p   the predicate to test
      */
     forall(p: (a: A) => boolean): boolean{
-        return this.isEmpty() || p(this[$get]());
+        return this.isEmpty() || p(this.get());
     }
 
     /**
@@ -176,7 +177,7 @@ export abstract class Option<A> {
      * @see flatMap
      */
     foreach<U>(f: (a: A) => U): void {
-        if (!this.isEmpty()) f(this[$get]());
+        if (!this.isEmpty()) f(this.get());
     }
 
     /**
@@ -203,13 +204,13 @@ export abstract class Option<A> {
 
     equals(target: Option<A>): boolean {
         return (
-            this.isDefined() && target.isDefined() && this[$get]() === target[$get]()
+            this.isDefined() && target.isDefined() && this.get() === target.get()
         ) || (this.isEmpty() && target.isEmpty());
     }
 
     [Symbol.iterator] = function* () {
         if (this.isDefined()) {
-            yield this[$get]();
+            yield this.get();
         }
     }
 }
@@ -223,7 +224,7 @@ export class Some<A> extends Option<A>{
         return false;
     }
 
-    protected [$get](): A {
+    get(): A {
         return this.x;
     }
 }
@@ -233,14 +234,14 @@ export class None<A> extends Option<A>{
         return true;
     }
 
-    protected [$get](): A {
+    get(): A {
         throw new RangeError('none.get()');
     }
 }
 
 export const none = new None<any>();
 
-export const some = <A>(x: A): Option<A> => {
+export const some = <A>(x: A|null): Option<A> => {
     if(x === null || typeof x === 'undefined'){
         return none as Option<A>;
     }

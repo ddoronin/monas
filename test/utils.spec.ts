@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { find, funcOrVal } from '../src/utils';
+import { find, funcOrVal, isFunction } from '../src/utils';
 
 describe('utils', () => {
     describe('find<A>(array: A[], p: (a: A) => boolean): Option<A>', () => {
@@ -25,6 +25,18 @@ describe('utils', () => {
         it('should handle a func callback', () => {
             let f = funcOrVal<void, number>(() => 42 * 2);
             expect(f(void 0)).to.be.eq(84);
+        });
+    });
+
+    describe('function isFunction<A, B>(f: ((a: A) => B) | B| A): f is (a: A) => B', () => {
+        it('should return true if the callback is a function', () => {
+            let isF = isFunction(() => 'test');
+            expect(isF).to.be.true;
+        });
+
+        it('should return false if the callback is not a function', () => {
+            let isF = isFunction('test');
+            expect(isF).to.be.false;
         });
     });
 });

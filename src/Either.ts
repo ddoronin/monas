@@ -1,5 +1,5 @@
 import { funcOrVal, FuncOrVal } from "./utils";
-import { none, Option, some, $get } from "./Option";
+import { none, Option, some } from "./Option";
 
 /**
  * Methods available only internally.

@@ -15,14 +15,24 @@ describe('Option', () => {
         });
 
         it('should return none if the value is null', () => {
-            let smth: Option<number> = option(null);
+            let n: number|null = null;
+            let smth: Option<number> = option(n);
             expect(smth).to.eq(none as Option<number>);
         });
-
 
         it('should return none if the value is undefined', () => {
             let smth: Option<number> = option(undefined);
             expect(smth).to.eq(none as Option<number>);
+        });
+    });
+
+    describe('get(a)', () => {
+        it('should return value if some(value)', () => {
+            expect(some('test').get()).to.be.eq('test');
+        });
+
+        it('should throw an exception if it\'s none', () => {
+            expect(some(null).get).to.throw();
         });
     });
 
@@ -174,6 +184,7 @@ describe('Option', () => {
 
             it('should return $none if it is nonempty, but applying the predicate $p to this $option\'s value returns true.', () => {
                 let a = some(42);
+                // some(42) filter not equal(42)
                 assert(a.filterNot(_ => _ === 42).equals(none));
             });
 
